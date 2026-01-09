@@ -23,7 +23,6 @@ const {
 
 import { _getProps, Props } from '../types/Props';
 
-
 const CreationHandler = function ( this: unknown, constructionAnswer: unknown ) {
 	// standard says :
 	// if constructor returns something
@@ -271,7 +270,7 @@ const TypesUtils = {
 	checkTypeName,
 	findSubTypeFromParent,
 	makeFakeModificatorType,
-	reflectPrimitiveWrappers
+	reflectPrimitiveWrappers,
 };
 
 export default TypesUtils;

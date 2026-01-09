@@ -244,6 +244,29 @@ const makeSubTypeProxy = function (subtype: any, inheritedInstance: any) {
 	return subtypeProxy;
 };
 
+const prepareSubtypeForConstruction = function (subtypeName: any, inheritedInstance: any) {
+	// prototype of proxy
+	const propInstance: any = Reflect.getPrototypeOf(inheritedInstance);
+
+	const props = _getProps(propInstance) as Props;
+	const {
+		__type__: {
+			config: {
+				strictChain
+			},
+			subtypes
+		},
+	} = props;
+
+
+	const subtype = subtypes.has(subtypeName) ?
+		subtypes.get(subtypeName) :
+		strictChain ?
+			undefined :
+			findSubTypeFromParent(inheritedInstance, subtypeName);
+
+	return subtype ? makeSubTypeProxy(subtype, inheritedInstance) : undefined;
+};
 
 const mnemosyneProxyHandlerGet = (target: any, prop: string, receiver: any) => {
 
@@ -273,29 +296,9 @@ const mnemosyneProxyHandlerGet = (target: any, prop: string, receiver: any) => {
 		return result;
 	}
 
-	// prototype of proxy
-	const instance: any = Reflect.getPrototypeOf(receiver);
-
-	const props = _getProps(instance) as Props;
-	const {
-		__type__: {
-			config: {
-				strictChain
-			},
-			subtypes
-		},
-	} = props;
-
-
-	const subtype = subtypes.has(prop) ?
-		subtypes.get(prop) :
-		strictChain ?
-			undefined :
-			findSubTypeFromParent(instance, prop);
-
-	return subtype ? makeSubTypeProxy(subtype, receiver) : result;
+	const subtype = prepareSubtypeForConstruction(prop, receiver);
+	return subtype || result;
 };
-
 
 const Mnemosyne = function (gaia: any) {
 
@@ -370,6 +373,9 @@ export default {
 	Gaia,
 	get createMnemosyne () {
 		return createMnemosyne;
+	},
+	get prepareSubtypeForConstruction () {
+		return prepareSubtypeForConstruction;
 	},
 	// get MnemosynePrototypeKeys () {
 	// 	return MnemosynePrototypeKeys;

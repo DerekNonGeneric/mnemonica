@@ -84,9 +84,11 @@ const tests = ( opts ) => {
 			const oneElseEmpty = new EmptyType();
 			const oneElseEmptyProto = Object.getPrototypeOf( Object.getPrototypeOf( Object.getPrototypeOf( oneElseEmpty ) ) );
 
+			// oxlint-disable-next-line no-unused-expressions
 			expect( () => {
 				oneElseEmptyProto[ SymbolConstructorName ] = undefined;
 			} ).to.throw;
+			// oxlint-disable-next-line no-unused-expressions
 			expect( () => {
 				delete oneElseEmptyProto[ SymbolConstructorName ];
 			} ).to.throw;

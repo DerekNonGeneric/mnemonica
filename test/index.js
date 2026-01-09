@@ -20,7 +20,10 @@ const asyncConstructionTest = true;
 
 const mnemonica = require('..');
 
-const { myDecoratedSubInstance, myDecoratedSubSubInstance, myOtherInstance } = require('./decorate');
+
+const { myDecoratedInstance, myDecoratedSubInstance, myDecoratedSubSubInstance, myOtherInstance } = require('./decorate');
+
+debugger;
 
 const {
 	define,
@@ -631,6 +634,7 @@ describe('Main Test', () => {
 		backSub,
 		subOfSomeADTCInstanceC,
 		subOfSomeADTCInstanceB,
+		myDecoratedInstance,
 		myDecoratedSubInstance,
 		myDecoratedSubSubInstance,
 		myOtherInstance,
@@ -1099,7 +1103,7 @@ describe('Main Test', () => {
 					let thrown;
 					try {
 						const result = hookedMethod.call(nestedAsyncSub, 'getThisPropMethod');
-						debugger;
+						// debugger;
 						result.call(nestedAsyncSub, 'missingProp');
 					} catch (error) {
 						thrown = error;

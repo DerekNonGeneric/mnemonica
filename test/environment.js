@@ -50,6 +50,7 @@ const tests = (opts) => {
 		subOfSomeADTCInstanceANoArgs,
 		subOfSomeADTCInstanceC,
 		subOfSomeADTCInstanceB,
+		myDecoratedInstance,
 		myDecoratedSubInstance,
 		myDecoratedSubSubInstance,
 		myOtherInstance,
@@ -186,7 +187,7 @@ const tests = (opts) => {
 
 			it('named function definition exist', () => {
 				const { __subtypes__ } = getProps(user);
-				expect(__subtypes__.has('NamedFunction')).is.true;
+				expect(__subtypes__.has('NamedFunction')).is.equal(true);
 			});
 
 			const NamedClassPtr = UserType.define(() => {
@@ -225,7 +226,7 @@ const tests = (opts) => {
 
 			it('named class definition exist', () => {
 				const { __subtypes__ } = getProps(user);
-				expect(__subtypes__.has('NamedClass')).is.true;
+				expect(__subtypes__.has('NamedClass')).is.equal(true);
 			});
 
 			const nf = await new user.NamedFunction();
@@ -312,16 +313,16 @@ const tests = (opts) => {
 		describe('core env tests', () => {
 
 			it('Symbol Gaia', () => {
-				expect(userTC[ SymbolGaia ][ MNEMONICA ] === GAIA).is.true;
+				expect(userTC[ SymbolGaia ][ MNEMONICA ] === GAIA).is.equal(true);
 			});
 			it('.SubTypes definition is correct Regular', () => {
-				expect(hop(userTC, 'WithoutPassword')).is.false;
+				expect(hop(userTC, 'WithoutPassword')).is.equal(false);
 			});
 			it('.SubTypes definition is correct Regular FirstChild', () => {
 				// 0.8.4 -- changed interface, no more methods inside of prototype chain
 				// expect(Object.getPrototypeOf(Object.getPrototypeOf(userTC)).hasOwnProperty('WithoutPassword')).is.true;
 				const { __subtypes__ } = getProps(userTC);
-				expect(__subtypes__.has('WithoutPassword')).is.true;
+				expect(__subtypes__.has('WithoutPassword')).is.equal(true);
 			});
 
 			it('.SubTypes definition is correct Regular Nested Children', () => {
@@ -330,9 +331,9 @@ const tests = (opts) => {
 					Object.getPrototypeOf(Object.getPrototypeOf(moreOver))
 				);
 				const { __subtypes__: os } = getProps(overMore);
-				expect(os.has('EvenMore')).is.true;
+				expect(os.has('EvenMore')).is.equal(true);
 				const { __subtypes__: ms } = getProps(moreOver);
-				expect(ms.has('OverMore')).is.true;
+				expect(ms.has('OverMore')).is.equal(true);
 				// 0.8.4 -- changed interface, no more methods inside of prototype chain
 				// expect(Object.getPrototypeOf(Object.getPrototypeOf(overMore)).hasOwnProperty('EvenMore')).is.true;
 				// expect(Object.getPrototypeOf(Object.getPrototypeOf(moreOver)).hasOwnProperty('OverMore')).is.true;
@@ -354,9 +355,9 @@ const tests = (opts) => {
 				expect(SymbolConstructorName).to.be.a('symbol');
 			});
 			it('instance checking works', () => {
-				expect(true instanceof UserType).to.be.false;
-				expect(undefined instanceof UserType).to.be.false;
-				expect(Object.create(null) instanceof UserType).to.be.false;
+				expect(true instanceof UserType).to.be.equal(false);
+				expect(undefined instanceof UserType).to.be.equal(false);
+				expect(Object.create(null) instanceof UserType).to.be.equal(false);
 			});
 
 			it('should refer defaultCollection from defaultTypes.subtypes', () => {
@@ -370,6 +371,8 @@ const tests = (opts) => {
 			});
 
 			it('decorate works correctly', () => {
+				// debugger;
+				expect(myDecoratedInstance.field).equal(123);
 				expect(myDecoratedSubInstance.sub_field).equal(321);
 				expect(myDecoratedSubInstance.field).equal(123);
 				expect(myOtherInstance.prop).equal(321);
@@ -415,8 +418,8 @@ const tests = (opts) => {
 				it('type creation from Proxy.set()', () => {
 					const userProxyTyped = user.ProxyTyped('aha');
 					expect(userProxyTyped.str).equal('aha');
-					expect(userProxyTyped.proxyTyped).is.true;
-					expect(UserType.ProxyTyped.prototype.proxyTyped).is.true;
+					expect(userProxyTyped.proxyTyped).is.equal(true);
+					expect(UserType.ProxyTyped.prototype.proxyTyped).is.equal(true);
 					expect(userProxyTyped.SaySomething()).equal('something : true');
 				});
 				try {
@@ -473,7 +476,7 @@ const tests = (opts) => {
 
 		describe('base error shoud be defined', () => {
 			it('BASE_MNEMONICA_ERROR exists', () => {
-				expect(errors.BASE_MNEMONICA_ERROR).to.exist;
+				expect(errors.BASE_MNEMONICA_ERROR).is.not.equal(undefined);
 			});
 			try {
 				throw new errors.BASE_MNEMONICA_ERROR();
@@ -547,7 +550,7 @@ const tests = (opts) => {
 			it('thrown error.stack should have seekable definition without stack cleaner', () => {
 				expect(errored.stack.indexOf(stackstart)).equal(1);
 				expect(errored.stack
-					.indexOf('environment.js') > 0).is.true;
+					.indexOf('environment.js') > 0).is.equal(true);
 			});
 			it('thrown error.stack should have seekable definition without Error.captureStackTrace', () => {
 				const { captureStackTrace } = Error;
@@ -556,14 +559,14 @@ const tests = (opts) => {
 				Error.captureStackTrace = captureStackTrace;
 				expect(errored1.stack.indexOf(stackstart)).equal(1);
 				expect(errored1.stack
-					.indexOf('environment.js') > 0).is.true;
+					.indexOf('environment.js') > 0).is.equal(true);
 			});
 			it('thrown error.stack should have seekable definition with stack cleaner', () => {
 				defineStackCleaner(stackCleanerRegExp);
 				const errored2 = new BadType({});
 				expect(errored2.stack.indexOf(stackstart)).equal(1);
 				expect(errored2.stack
-					.indexOf('environment.js') > 0).is.true;
+					.indexOf('environment.js') > 0).is.equal(true);
 			});
 		});
 
@@ -625,7 +628,7 @@ const tests = (opts) => {
 				const MyProtoCheckFn = function () { };
 				MyProtoCheckFn.prototype.asdf = 123;
 				MyProtoCheckFn.prototype.fdsa = 123;
-				debugger;
+				// debugger;
 				const MyProtoCheckType = define(MyProtoCheckFn);
 				expect(MyProtoCheckType.proto.asdf).equal(MyProtoCheckFn.prototype.asdf);
 				MyProtoCheckType.prototype = { asdf : 321 };
@@ -697,11 +700,11 @@ const tests = (opts) => {
 		describe('another instances', () => {
 			it('Another typesCollections gather types', () => {
 				// expect(anotherTypesCollection).hasOwnProperty('AnotherCollectionType');
-				expect(hop(anotherTypesCollection, 'AnotherCollectionType')).is.true;
+				expect(hop(anotherTypesCollection, 'AnotherCollectionType')).is.equal(true);
 				// expect(oneElseTypesCollection).hasOwnProperty('OneElseCollectionType');
-				expect(hop(anotherTypesCollection, 'SomethingThatDoesNotExist')).is.false;
-				expect(hop(oneElseTypesCollection, 'OneElseCollectionType')).is.true;
-				expect(hop(oneElseTypesCollection, 'SomethingThatDoesNotExist')).is.false;
+				expect(hop(anotherTypesCollection, 'SomethingThatDoesNotExist')).is.equal(false);
+				expect(hop(oneElseTypesCollection, 'OneElseCollectionType')).is.equal(true);
+				expect(hop(oneElseTypesCollection, 'SomethingThatDoesNotExist')).is.equal(false);
 			});
 
 			it('Instance Of Another and AnotherCollectionType', () => {
@@ -865,8 +868,8 @@ const tests = (opts) => {
 			expect(errorPtr).instanceOf(errors.PROTOTYPE_USED_TWICE);
 		});
 		it('wrong .exception() creation should have nice message', () => {
-			expect(errorPtr.message.includes('.prototype used twice')).is.true;
-			expect(errorPtr.message.includes('ErroredShape')).is.true;
+			expect(errorPtr.message.includes('.prototype used twice')).is.equal(true);
+			expect(errorPtr.message.includes('ErroredShape')).is.equal(true);
 		});
 	});
 
@@ -899,9 +902,9 @@ const tests = (opts) => {
 			expect(errorPtr).instanceOf(errors.PROTOTYPE_USED_TWICE);
 		});
 		it('wrong .exception() creation should have nice message', () => {
-			expect(errorPtr.message.includes('.prototype used twice')).is.true;
-			expect(errorPtr.message.includes('DelayedErrorShape')).is.true;
-			expect(errorPtr.message.includes('ShapeMyError')).is.true;
+			expect(errorPtr.message.includes('.prototype used twice')).is.equal(true);
+			expect(errorPtr.message.includes('DelayedErrorShape')).is.equal(true);
+			expect(errorPtr.message.includes('ShapeMyError')).is.equal(true);
 		});
 	});
 
@@ -977,7 +980,7 @@ const tests = (opts) => {
 			expect(wrongErrorInstanceNoNew).instanceOf(errors.WRONG_INSTANCE_INVOCATION);
 		});
 		it('wrong .exception() creation should have nice message', () => {
-			expect(wrongErrorInstanceNoNew.message.includes('exception should be made with new keyword')).is.true;
+			expect(wrongErrorInstanceNoNew.message.includes('exception should be made with new keyword')).is.equal(true);
 		});
 
 
@@ -995,7 +998,7 @@ const tests = (opts) => {
 			expect(wrongErrorInstanceIsNotAnError).instanceOf(errors.WRONG_ARGUMENTS_USED);
 		});
 		it('wrong .exception() creation should have nice message', () => {
-			expect(wrongErrorInstanceIsNotAnError.message.includes('error must be instanceof Error')).is.true;
+			expect(wrongErrorInstanceIsNotAnError.message.includes('error must be instanceof Error')).is.equal(true);
 		});
 
 		it('wrong .exception() .instance should be existent instance', () => {

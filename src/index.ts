@@ -20,6 +20,9 @@ const { odp } = constants;
 import * as errorsApi from './api/errors';
 import { descriptors } from './descriptors';
 
+import mnemosynes from './api/types/Mnemosyne';
+const { prepareSubtypeForConstruction } = mnemosynes;
+
 export const {
 	defaultTypes,
 } = descriptors;
@@ -54,29 +57,40 @@ export const lookup = function ( TypeNestedPath ) {
 	return types.lookup( TypeNestedPath );
 } as TypeLookup;
 
+
+const $run =  function <E extends object, T extends object, S extends Proto<E, T>> ( entity: E, Constructor: IDEF<T>, args: unknown[] = [] ): {
+	[ key in keyof S ]: S[ key ]
+} {
+	// eslint-disable-next-line no-debugger
+	// debugger;
+	// @ts-ignore
+	const Cstr = prepareSubtypeForConstruction(Constructor.TypeName, entity);
+	if (!Cstr) {
+		// @ts-ignore
+		throw new TypeError(`Type ${Constructor.TypeName} is not defined in the current context.`);
+	}
+	const result = new Cstr(...args);
+	// @ts-ignore
+	return result;
+};
+
 export const apply = function <E extends object, T extends object, S extends Proto<E, T>> ( entity: E, Constructor: IDEF<T>, args: unknown[] = [] ): {
 	[ key in keyof S ]: S[ key ]
 } {
-	// @ts-ignore
-	const result = new entity[ Constructor.TypeName ]( ...args );
-	return result;
+	return $run<E, T, S>( entity, Constructor, args );
 };
 
 export const call = function <E extends object, T extends object, S extends Proto<E, T>> ( entity: E, Constructor: IDEF<T>, ...args: unknown[] ): {
 	[ key in keyof S ]: S[ key ]
 } {
-	// @ts-ignore
-	const result = new entity[ Constructor.TypeName ]( ...args );
-	return result;
+	return $run<E, T, S>( entity, Constructor, args );
 };
 
 export const bind = function <E extends object, T extends object, S extends Proto<E, T>> ( entity: E, Constructor: IDEF<T> ): ( ...args: unknown[] ) => {
 	[ key in keyof S ]: S[ key ]
 } {
 	return ( ...args ) => {
-		// @ts-ignore
-		const result = new entity[ Constructor.TypeName ]( ...args );
-		return result;
+		return $run<E, T, S>( entity, Constructor, args );
 	};
 };
 
