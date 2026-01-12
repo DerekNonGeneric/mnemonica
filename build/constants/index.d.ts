@@ -1,14 +1,10 @@
 export declare const constants: {
     readonly SymbolParentType: symbol;
     readonly SymbolConstructorName: symbol;
-    readonly SymbolGaia: symbol;
-    readonly SymbolReplaceUranus: symbol;
     readonly SymbolDefaultTypesCollection: symbol;
     readonly SymbolConfig: symbol;
     readonly MNEMONICA: string;
     readonly MNEMOSYNE: string;
-    readonly GAIA: string;
-    readonly URANUS: string;
     readonly odp: (o: any, p: PropertyKey, attributes: PropertyDescriptor & ThisType<any>) => any;
     readonly defaultOptions: Record<string, unknown>;
     readonly defaultOptionsKeys: string[];

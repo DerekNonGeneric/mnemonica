@@ -8,12 +8,12 @@ const {
 
 import { constants } from '../constants';
 const {
-	SymbolGaia
+	MNEMONICA,
+	SymbolConstructorName
 } = constants;
 
-import { extract } from './extract';
 
-import { hop } from './hop';
+import { extract } from './extract';
 
 export const parse = ( self: any ): any => {
 
@@ -45,15 +45,10 @@ export const parse = ( self: any ): any => {
 	delete joint.constructor;
 
 	let parent;
-	let gaia;
-	if ( hop( protoProto, SymbolGaia ) ) {
+	if ( protoProto[ SymbolConstructorName ] === MNEMONICA ) {
 		parent = protoProto;
-		// SymbolGaia means we are reached prototype chain root
-		gaia = self[ SymbolGaia ];
 	} else {
 		parent = parse( Reflect.getPrototypeOf( protoProto ) );
-		// eslint-disable-next-line prefer-destructuring
-		gaia = parent.gaia;
 	}
 
 	return {
@@ -69,7 +64,6 @@ export const parse = ( self: any ): any => {
 		joint,
 		// args,
 		parent,
-		gaia
 
 	};
 };

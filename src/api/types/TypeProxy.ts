@@ -121,7 +121,7 @@ TypeProxy.prototype.construct = function (__: unknown, args: unknown[]) {
 		Uranus
 	} = this;
 
-	const mnemosyneProxy = createMnemosyne(Uranus);
+	const mnemosyneProxy = createMnemosyne(Uranus || null);
 	const instance = new InstanceCreator( type, mnemosyneProxy, args );
 
 	// const instance = new InstanceCreator(type, null, args);

@@ -262,7 +262,6 @@ const tests = ( opts ) => {
 			const {
 				stack
 			} = wrongSyncTypeErr;
-			// debugger;
 			expect( stack.indexOf( stackstart ) ).equal( 1 );
 			expect( stack.indexOf( 'async.chain.js:1' ) > 0 ).is.true;
 			expect( wrongSyncTypeErr ).instanceOf( Error );

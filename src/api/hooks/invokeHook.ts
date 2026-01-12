@@ -1,10 +1,5 @@
 'use strict';
 
-import { constants } from '../../constants';
-const {
-	MNEMONICA,
-} = constants;
-
 import { flowCheckers } from './flowCheckers';
 
 import { hop } from '../../utils/hop';
@@ -38,8 +33,7 @@ export const invokeHook = function ( this: any, hookType: string, opts: { [ inde
 		const hookArgs = {
 			type,
 			TypeName,
-			existentInstance : existentInstance.constructor.name === MNEMONICA ?
-				null : existentInstance,
+			existentInstance,
 			args,
 		};
 

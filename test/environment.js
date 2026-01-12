@@ -13,11 +13,11 @@ const {
 	SymbolDefaultTypesCollection,
 	SymbolParentType,
 	SymbolConstructorName,
-	SymbolGaia,
+	// SymbolGaia,
 	SymbolConfig,
 	MNEMONICA,
 	MNEMOSYNE,
-	GAIA,
+	// GAIA,
 	createTypesCollection,
 	utils: {
 		toJSON,
@@ -88,8 +88,9 @@ const tests = (opts) => {
 			});
 
 			const nullR = new NullishReturn('NullishReturn');
-
-			expect(nullR).instanceOf(Object);
+			expect(nullR).instanceOf(NullishReturn);
+			expect(nullR instanceof Object).equal(false);
+			expect(nullR).not.instanceOf(Object);
 
 		});
 		describe('interface test', () => {
@@ -97,14 +98,14 @@ const tests = (opts) => {
 			const interface_keys = [
 				'SymbolParentType',
 				'SymbolConstructorName',
-				'SymbolGaia',
-				'SymbolReplaceUranus',
+				// 'SymbolGaia',
+				// 'SymbolReplaceUranus',
 				'SymbolDefaultTypesCollection',
 				'SymbolConfig',
 				'MNEMONICA',
 				'MNEMOSYNE',
-				'GAIA',
-				'URANUS',
+				// 'GAIA',
+				// 'URANUS',
 				'TYPE_TITLE_PREFIX',
 				'ErrorMessages',
 				'defineStackCleaner',
@@ -312,9 +313,9 @@ const tests = (opts) => {
 
 		describe('core env tests', () => {
 
-			it('Symbol Gaia', () => {
-				expect(userTC[ SymbolGaia ][ MNEMONICA ] === GAIA).is.equal(true);
-			});
+			// it('Symbol Gaia', () => {
+			// 	expect(userTC[ SymbolGaia ][ MNEMONICA ] === GAIA).is.equal(true);
+			// });
 			it('.SubTypes definition is correct Regular', () => {
 				expect(hop(userTC, 'WithoutPassword')).is.equal(false);
 			});
@@ -524,9 +525,10 @@ const tests = (opts) => {
 			var hookInstance;
 			BadType.registerHook('creationError', (_hookInstance) => {
 				hookInstance = _hookInstance;
+				// set hook inteception, so error instance returned instead of throwing;
 				return true;
 			});
-			const errored = new BadType({});
+			let errored = new BadType({});
 			const stackstart = '<-- creation of [ BadType ] traced -->';
 			it('should respect the rules', () => {
 				expect(errored).instanceOf(Error);

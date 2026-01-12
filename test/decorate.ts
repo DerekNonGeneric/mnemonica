@@ -2,7 +2,7 @@ import { decorate, apply, ConstructorFunction } from '..';
 
 // debugger;
 
-@decorate(undefined, { strictChain : false })
+@decorate({ strictChain : false })
 class MyDecoratedClass {
 	field: number;
 	constructor () {

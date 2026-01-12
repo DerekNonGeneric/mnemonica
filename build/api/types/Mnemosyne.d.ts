@@ -1,6 +1,5 @@
 import { ConstructorFunction } from '../../types';
 declare const _default: {
-    Gaia: ConstructorFunction<object>;
     readonly createMnemosyne: (Uranus: unknown) => any;
     readonly prepareSubtypeForConstruction: (subtypeName: any, inheritedInstance: any) => ConstructorFunction<{
         getExistentAsyncStack: (existentInstance: import("../utils").asyncStack) => unknown;

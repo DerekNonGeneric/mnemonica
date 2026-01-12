@@ -5,12 +5,8 @@ import { constants } from '../../constants';
 const {
 	odp,
 	SymbolConstructorName,
-	SymbolGaia,
-	SymbolReplaceUranus,
 
 	MNEMONICA,
-	GAIA,
-	URANUS
 
 } = constants;
 
@@ -31,26 +27,7 @@ import { InstanceCreator } from './InstanceCreator';
 
 import { _getProps, Props } from './Props';
 
-const InstanceRoots = new WeakMap;
-
-const Gaia = function (Uranus: any) {
-
-	const gaiaProto = Uranus ? Uranus : this;
-
-	const GaiaConstructor = function () { } as ConstructorFunction<object>;
-	Reflect.setPrototypeOf(GaiaConstructor.prototype, Object.create(gaiaProto));
-
-	const gaia = new GaiaConstructor;
-
-	odp(gaia, MNEMONICA, {
-		get () {
-			return !Uranus ? GAIA : URANUS;
-		}
-	});
-
-	return gaia;
-} as ConstructorFunction<object>;
-
+// const InstanceRoots = new WeakMap;
 
 const MnemonicaProtoProps = {
 
@@ -116,15 +93,6 @@ const MnemonicaProtoProps = {
 
 			return forked;
 
-		};
-	},
-
-	[ SymbolReplaceUranus ] () {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		return function (this: any, uranus: any) {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			Reflect.setPrototypeOf(Reflect.getPrototypeOf(this[ SymbolGaia ]), uranus);
 		};
 	},
 
@@ -220,20 +188,7 @@ const makeSubTypeProxy = function (subtype: any, inheritedInstance: any) {
 				thisArg = inheritedInstance;
 			}
 
-			// TODO: if we would make new keyword obligatory
-			// then we should avoid it here, with throw Error
-
-			let existentInstance = reflectPrimitiveWrappers(thisArg);
-
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			if (!existentInstance[ SymbolGaia ]) {
-				const mnemosyne = new Mnemosyne(new Gaia(existentInstance));
-				existentInstance = new Proxy(mnemosyne, {
-					get : mnemosyneProxyHandlerGet
-				});
-			}
-			// else is the ordinary way for all entities
+			const existentInstance = reflectPrimitiveWrappers(thisArg);
 
 			const entity = new Target(subtype, existentInstance, _args);
 			return entity;
@@ -300,7 +255,7 @@ const mnemosyneProxyHandlerGet = (target: any, prop: string, receiver: any) => {
 	return subtype || result;
 };
 
-const Mnemosyne = function (gaia: any) {
+const Mnemosyne = function (mnemonica: object | null) {
 
 	// eslint-disable-next-line @typescript-eslint/no-this-alias
 	const instance = this;
@@ -312,8 +267,6 @@ const Mnemosyne = function (gaia: any) {
 			}
 		});
 	};
-
-	const mnemonica = Reflect.getPrototypeOf(gaia);
 
 	Reflect.setPrototypeOf(Mnemonica.prototype, mnemonica);
 
@@ -343,25 +296,17 @@ const Mnemosyne = function (gaia: any) {
 		}
 	});
 
-	odp(Mnemonica.prototype, SymbolGaia, {
-		get () {
-			return gaia;
-		}
-	});
-
 	const proto = new Mnemonica();
 
 	Reflect.setPrototypeOf(instance, proto);
 
-	InstanceRoots.set(instance, proto);
+	// InstanceRoots.set(instance, proto);
 
 } as ConstructorFunction<typeof MnemonicaProtoProps>;
 
 const createMnemosyne = function (Uranus: unknown) {
-	// constructs new Gaia -> new Mnemosyne
-	// to build the first instance in chain
 	const uranus = reflectPrimitiveWrappers(Uranus);
-	const mnemosyne = new Mnemosyne(new Gaia(uranus));
+	const mnemosyne = new Mnemosyne(uranus);
 	const mnemosyneProxy = new Proxy(mnemosyne, {
 		get : mnemosyneProxyHandlerGet
 	});
@@ -370,7 +315,6 @@ const createMnemosyne = function (Uranus: unknown) {
 };
 
 export default {
-	Gaia,
 	get createMnemosyne () {
 		return createMnemosyne;
 	},

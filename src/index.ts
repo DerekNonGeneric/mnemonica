@@ -12,7 +12,7 @@ import {
 	IDefinitorInstance
 } from './types';
 export type { IDEF, ConstructorFunction } from './types';
-export {  getProps, setProps } from './api/types/Props';
+export { getProps, setProps } from './api/types/Props';
 
 import { constants } from './constants';
 const { odp } = constants;
@@ -27,7 +27,7 @@ export const {
 	defaultTypes,
 } = descriptors;
 
-function checkThis ( pointer: typeof mnemonica | typeof exports | unknown ): boolean {
+function checkThis(pointer: typeof mnemonica | typeof exports | unknown): boolean {
 	return pointer === mnemonica || pointer === exports;
 }
 
@@ -42,75 +42,100 @@ export const define = function <
 	// then it goes to new() keyword of define output
 	S extends SN & N,
 	R extends IDefinitorInstance<N, S>
-> (
+>(
 	this: unknown,
 	TypeName?: string,
 	constructHandler?: IDEF<T>,
 	config?: constructorOptions,
 ): R {
-	const types = checkThis( this ) ? defaultTypes : this || defaultTypes;
-	return types.define( TypeName, constructHandler, config );
+	const types = checkThis(this) ? defaultTypes : this || defaultTypes;
+	return types.define(TypeName, constructHandler, config);
 };
 
-export const lookup = function ( TypeNestedPath ) {
-	const types = checkThis( this ) ? defaultTypes : this || defaultTypes;
-	return types.lookup( TypeNestedPath );
+export const lookup = function (TypeNestedPath) {
+	const types = checkThis(this) ? defaultTypes : this || defaultTypes;
+	return types.lookup(TypeNestedPath);
 } as TypeLookup;
 
 
-const $run =  function <E extends object, T extends object, S extends Proto<E, T>> ( entity: E, Constructor: IDEF<T>, args: unknown[] = [] ): {
-	[ key in keyof S ]: S[ key ]
-} {
+const $run = function <E extends object, T extends object, S extends Proto<E, T>>(
+	entity: E,
+	Constructor: IDEF<T>,
+	args: unknown[] = []
+): {
+		[key in keyof S]: S[key]
+	} {
 	// eslint-disable-next-line no-debugger
 	// debugger;
 	// @ts-ignore
-	const Cstr = prepareSubtypeForConstruction(Constructor.TypeName, entity);
-	if (!Cstr) {
-		// @ts-ignore
-		throw new TypeError(`Type ${Constructor.TypeName} is not defined in the current context.`);
+	const { TypeName } = Constructor;
+	const Cstr = prepareSubtypeForConstruction(TypeName, entity);
+	if (Cstr === undefined) {
+		throw new TypeError(`Type ${TypeName} is not defined in the current context.`);
 	}
 	const result = new Cstr(...args);
 	// @ts-ignore
 	return result;
 };
 
-export const apply = function <E extends object, T extends object, S extends Proto<E, T>> ( entity: E, Constructor: IDEF<T>, args: unknown[] = [] ): {
-	[ key in keyof S ]: S[ key ]
-} {
-	return $run<E, T, S>( entity, Constructor, args );
+// TODO: apply instance .to type .with arguments
+export const apply = function <E extends object, T extends object, S extends Proto<E, T>>(
+	entity: E,
+	Constructor: IDEF<T>,
+	args: unknown[] = []
+): {
+		[key in keyof S]: S[key]
+	} {
+	return $run<E, T, S>(entity, Constructor, args);
 };
 
-export const call = function <E extends object, T extends object, S extends Proto<E, T>> ( entity: E, Constructor: IDEF<T>, ...args: unknown[] ): {
-	[ key in keyof S ]: S[ key ]
-} {
-	return $run<E, T, S>( entity, Constructor, args );
+// TODO: call type .by instance .with arguments
+export const call = function <E extends object, T extends object, S extends Proto<E, T>>(
+	entity: E,
+	Constructor: IDEF<T>,
+	...args: unknown[]
+): {
+		[key in keyof S]: S[key]
+	} {
+	return $run<E, T, S>(entity, Constructor, args);
 };
 
-export const bind = function <E extends object, T extends object, S extends Proto<E, T>> ( entity: E, Constructor: IDEF<T> ): ( ...args: unknown[] ) => {
-	[ key in keyof S ]: S[ key ]
+// TODO: bind type .with instance → (...args)
+export const bind = function <E extends object, T extends object, S extends Proto<E, T>>(
+	entity: E,
+	Constructor: IDEF<T>
+): (...args: unknown[]) => {
+	[key in keyof S]: S[key]
 } {
-	return ( ...args ) => {
-		return $run<E, T, S>( entity, Constructor, args );
+	return (...args) => {
+		return $run<E, T, S>(entity, Constructor, args);
 	};
 };
 
-export const decorate = function ( parentClass: unknown = undefined, config?: constructorOptions ) {
-	const decorator = function <T extends { new(): unknown }> ( cstr: T, s: ClassDecoratorContext<T> ): T {
-		if ( parentClass === undefined ) {
-			return define( s.name, cstr, config ) as unknown as T ;
+export const decorate = function (
+	parentClass: { new(): unknown } | constructorOptions | undefined = {},
+	config?: constructorOptions
+) {
+	if (typeof parentClass === 'object' && !(parentClass instanceof Function)) {
+		config = parentClass as constructorOptions;
+		parentClass = undefined;
+	}
+	const decorator = function <T extends { new(): unknown }>(cstr: T, s: ClassDecoratorContext<T>): T {
+		if (parentClass === undefined) {
+			return define(s.name, cstr, config) as unknown as T;
 		}
 		// @ts-ignore
-		return parentClass.define( s.name, cstr, config ) as unknown as T;
+		return parentClass.define(s.name, cstr, config) as unknown as T;
 	};
 	return decorator;
 };
 
-export const registerHook = function <T extends object> ( Constructor: IDEF<T>, hookType: hooksTypes, cb: hook ): void {
+export const registerHook = function <T extends object>(Constructor: IDEF<T>, hookType: hooksTypes, cb: hook): void {
 	// @ts-ignore
-	Constructor.registerHook( hookType, cb );
+	Constructor.registerHook(hookType, cb);
 };
 
-export const mnemonica = Object.entries( {
+export const mnemonica = Object.entries({
 
 	define,
 	lookup,
@@ -125,29 +150,25 @@ export const mnemonica = Object.entries( {
 	...errorsApi,
 	...constants,
 
-} ).reduce( ( acc: { [ index: string ]: unknown }, entry: [ string, unknown ] ) => {
+}).reduce((acc: { [index: string]: unknown }, entry: [string, unknown]) => {
 	const [ name, code ] = entry;
-	odp( acc, name, {
-		get () {
+	odp(acc, name, {
+		get() {
 			return code;
 		},
 		enumerable : true
-	} );
+	});
 	return acc;
-}, {} );
+}, {});
 
 export const {
 
 	SymbolParentType,
 	SymbolConstructorName,
-	SymbolGaia,
-	SymbolReplaceUranus,
 	SymbolDefaultTypesCollection,
 	SymbolConfig,
 	MNEMONICA,
 	MNEMOSYNE,
-	GAIA,
-	URANUS,
 	TYPE_TITLE_PREFIX,
 	ErrorMessages,
 	createTypesCollection,
