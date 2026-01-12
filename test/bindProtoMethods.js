@@ -56,7 +56,7 @@ const bindMethod = function ( hookData, instance, methodName, MethodItself ) {
 
 					return answer;
 				} catch ( error ) {
-					debugger;
+					// debugger;
 					odp( exceptionReason, 'error', {
 						value      : error,
 						enumerable : true

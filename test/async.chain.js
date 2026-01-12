@@ -262,7 +262,6 @@ const tests = ( opts ) => {
 			const {
 				stack
 			} = wrongSyncTypeErr;
-			// debugger;
 			expect( stack.indexOf( stackstart ) ).equal( 1 );
 			expect( stack.indexOf( 'async.chain.js:1' ) > 0 ).is.true;
 			expect( wrongSyncTypeErr ).instanceOf( Error );
@@ -416,10 +415,10 @@ const tests = ( opts ) => {
 		} );
 
 
-		// TODO: this test was working !
-		// it( 'straightErrorAsync expect args of AsyncErroredTypeStraight', () => {
-		// 	expect( getProps(straightErrorAsync).__args__ ).equal( undefined );
-		// } );
+		it( 'straightErrorAsync expect args of AsyncErroredTypeStraight', () => {
+			const props = getProps(straightErrorAsync);
+			expect( props ).equal( undefined );
+		} );
 
 		it( 'sleepError shold be instanceof plain Error only', () => {
 			expect( straightErrorAsync ).instanceOf( Error );
@@ -427,10 +426,10 @@ const tests = ( opts ) => {
 			expect( straightErrorAsync ).not.instanceOf( AsyncErroredTypeStraight );
 		} );
 
-		// TODO: this test was working !
-		// it( 'straightErrorSync expect args of SyncErroredTypeStraight', () => {
-		// 	expect( getProps(straightErrorSync).__args__ ).equal( undefined );
-		// } );
+		it( 'straightErrorSync expect args of SyncErroredTypeStraight', () => {
+			const props = getProps(straightErrorSync);
+			expect( props ).equal( undefined );
+		} );
 
 		it( 'sleepError shold be instanceof plain Error only', () => {
 			expect( straightErrorSync ).instanceOf( Error );

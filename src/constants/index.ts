@@ -8,19 +8,10 @@ const MNEMONICA = 'Mnemonica';
 // https://en.wikipedia.org/wiki/Mnemosyne
 const MNEMOSYNE = 'Mnemosyne';
 
-// Gaia - Wikipedia
-// https://en.wikipedia.org/wiki/Gaia
-const GAIA = 'Gaia';
-const URANUS = 'Uranus';
-
 // symbols
 const SymbolDefaultTypesCollection = Symbol( `default ${MNEMONICA} types collection` );
 const SymbolParentType = Symbol( 'Parent of this SubType Collection' );
 const SymbolConstructorName = Symbol( 'Defined Constructor Name' );
-
-// SymbolGaia means we are reached prototype chain root
-const SymbolGaia = Symbol( 'Defined Gaia Constructor' );
-const SymbolReplaceUranus = Symbol( 'Defined Method Name to Replace Gaia' );
 
 const SymbolConfig = Symbol( 'Mnemonica Config Data' );
 
@@ -99,14 +90,6 @@ export const constants = {
 		return SymbolConstructorName;
 	},
 
-	get 'SymbolGaia' () {
-		return SymbolGaia;
-	},
-
-	get 'SymbolReplaceUranus' () {
-		return SymbolReplaceUranus;
-	},
-
 	get 'SymbolDefaultTypesCollection' () {
 		return SymbolDefaultTypesCollection;
 	},
@@ -121,12 +104,6 @@ export const constants = {
 	},
 	get 'MNEMOSYNE' () {
 		return MNEMOSYNE;
-	},
-	get 'GAIA' () {
-		return GAIA;
-	},
-	get 'URANUS' () {
-		return URANUS;
 	},
 	get 'odp' () {
 		return ( o: any, p: PropertyKey, attributes: PropertyDescriptor & ThisType<any> ): any => {

@@ -91,7 +91,7 @@ module.exports = function (obey) {
 					});
 				}
 			} catch (err) {
-				debugger;
+				// debugger;
 				console.error(err);
 				process.exit(1);
 			}

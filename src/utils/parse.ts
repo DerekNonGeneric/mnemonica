@@ -6,14 +6,13 @@ const {
 	WRONG_ARGUMENTS_USED
 } = ErrorsTypes;
 
-import { constants } from '../constants';
-const {
-	SymbolGaia
-} = constants;
+// import { constants } from '../constants';
+// const {
+// 	MNEMONICA,
+// 	SymbolConstructorName
+// } = constants;
 
 import { extract } from './extract';
-
-import { hop } from './hop';
 
 export const parse = ( self: any ): any => {
 
@@ -44,17 +43,14 @@ export const parse = ( self: any ): any => {
 	const joint: any = extract( Object.assign( {}, proto ) );
 	delete joint.constructor;
 
-	let parent;
-	let gaia;
-	if ( hop( protoProto, SymbolGaia ) ) {
-		parent = protoProto;
-		// SymbolGaia means we are reached prototype chain root
-		gaia = self[ SymbolGaia ];
-	} else {
-		parent = parse( Reflect.getPrototypeOf( protoProto ) );
-		// eslint-disable-next-line prefer-destructuring
-		gaia = parent.gaia;
-	}
+	const parent = protoProto;
+	// TODO: deep parse
+	// let parent;
+	// if ( protoProto[ SymbolConstructorName ] === MNEMONICA ) {
+	// 	parent = parse( protoProto );
+	// } else {
+	// 	parent = Reflect.getPrototypeOf( protoProto );
+	// }
 
 	return {
 
@@ -69,7 +65,6 @@ export const parse = ( self: any ): any => {
 		joint,
 		// args,
 		parent,
-		gaia
 
 	};
 };

@@ -20,7 +20,10 @@ const asyncConstructionTest = true;
 
 const mnemonica = require('..');
 
-const { myDecoratedSubInstance, myDecoratedSubSubInstance, myOtherInstance } = require('./decorate');
+
+const { myDecoratedInstance, myDecoratedSubInstance, myDecoratedSubSubInstance, myOtherInstance } = require('./decorate');
+
+debugger;
 
 const {
 	define,
@@ -31,10 +34,10 @@ const {
 	defaultTypes,
 	createTypesCollection,
 	MNEMONICA,
-	URANUS,
+	// URANUS,
 	SymbolParentType,
 	SymbolConstructorName,
-	SymbolGaia,
+	// SymbolGaia,
 	utils: {
 		extract,
 		pick,
@@ -276,7 +279,9 @@ try {
 	var userPL_NoNew = userPL1.UserTypePL2();
 } catch (err) { console.error(err); }
 
-const AsyncWOReturn = define('AsyncWOReturn', async function () { });
+const AsyncWOReturn = define('AsyncWOReturn', async function () {
+	// debugger;
+});
 
 const AsyncWOReturnNAR = define('AsyncWOReturnNAR', async function () { }, {
 	awaitReturn : false
@@ -631,6 +636,7 @@ describe('Main Test', () => {
 		backSub,
 		subOfSomeADTCInstanceC,
 		subOfSomeADTCInstanceB,
+		myDecoratedInstance,
 		myDecoratedSubInstance,
 		myDecoratedSubSubInstance,
 		myOtherInstance,
@@ -1099,7 +1105,6 @@ describe('Main Test', () => {
 					let thrown;
 					try {
 						const result = hookedMethod.call(nestedAsyncSub, 'getThisPropMethod');
-						debugger;
 						result.call(nestedAsyncSub, 'missingProp');
 					} catch (error) {
 						thrown = error;
@@ -1290,11 +1295,11 @@ describe('Main Test', () => {
 					expect(asyncInstanceFork).instanceof(AsyncType);
 
 					expect(typeof asyncInstanceDirect.on === 'function').is.true;
-					expect(ogp(ogp(ogp(asyncInstanceDirect[ SymbolGaia ]))) === process).is.true;
-					expect(asyncInstanceDirect[ SymbolGaia ][ MNEMONICA ] === URANUS).is.true;
+					// expect(ogp(ogp(ogp(asyncInstanceDirect[ SymbolGaia ]))) === process).is.true;
+					// expect(asyncInstanceDirect[ SymbolGaia ][ MNEMONICA ] === URANUS).is.true;
 					expect(typeof asyncInstanceDirectApply.on === 'function').is.true;
-					expect(ogp(ogp(ogp(asyncInstanceDirectApply[ SymbolGaia ]))) === process).is.true;
-					expect(asyncInstanceDirectApply[ SymbolGaia ][ MNEMONICA ] === URANUS).is.true;
+					// expect(ogp(ogp(ogp(asyncInstanceDirectApply[ SymbolGaia ]))) === process).is.true;
+					// expect(asyncInstanceDirectApply[ SymbolGaia ][ MNEMONICA ] === URANUS).is.true;
 
 					expect(nestedAsyncInstance).instanceof(AsyncType);
 					expect(nestedAsyncInstance).instanceof(NestedAsyncType);
@@ -1316,7 +1321,8 @@ describe('Main Test', () => {
 				});
 
 				it('parse shouls work with async .call\'ed instances', () => {
-					const etalon = [ 'name', 'props', 'self', 'proto', 'joint', 'parent', 'gaia' ];
+					// const etalon = [ 'name', 'props', 'self', 'proto', 'joint', 'parent', 'gaia' ];
+					const etalon = [ 'name', 'props', 'self', 'proto', 'joint', 'parent', ];
 					const keys = Object.keys(parse(asyncInstance));
 					assert.deepEqual(keys, etalon);
 				});

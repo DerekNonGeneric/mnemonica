@@ -1,8 +1,8 @@
 'use strict';
 
-const {
-	SymbolGaia,
-} = require( '..' );
+// const {
+// 	SymbolGaia,
+// } = require( '..' );
 
 const gof = Object.getPrototypeOf;
 
@@ -252,9 +252,9 @@ const tests = ( opts ) => {
 		} );
 
 		it( 'instance.ConstructorName.call(process) should work', () => {
-			const gaia = overMoreCallEvenMoreProcess[ SymbolGaia ];
-			const gaiaProto = gof(gof( gaia ));
-			expect( gof( gaiaProto ) ).equal( process );
+			// const gaia = overMoreCallEvenMoreProcess[ SymbolGaia ];
+			// const gaiaProto = gof(gof( gaia ));
+			// expect( gof( gaiaProto ) ).equal( process );
 
 			expect( overMoreCallEvenMoreProcess ).instanceof( overMore.EvenMore );
 			expect( overMoreCallEvenMoreProcess ).instanceof( evenMore );

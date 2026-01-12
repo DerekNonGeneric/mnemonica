@@ -104,7 +104,7 @@ const tests = ( opts ) => {
 			const constructorsSequence = collectConstructors( evenMore, true );
 			it( 'must be ok', () => {
 				// assert.equal(constructorsSequence.length, 25);
-				assert.equal( constructorsSequence.length, 21 );
+				assert.equal( constructorsSequence.length, 20 );
 				assert.deepEqual( constructorsSequence, [
 					'EvenMore',
 					'EvenMore',
@@ -130,8 +130,9 @@ const tests = ( opts ) => {
 					'UserTypeConstructor',
 					'Mnemonica',
 					'Mnemosyne',
-					'GaiaConstructor',
-					'Object'
+					'Object: null prototype',
+					// 'GaiaConstructor', // ancient memories
+					// 'Object'
 				] );
 			} );
 
@@ -146,9 +147,9 @@ const tests = ( opts ) => {
 				.map( ( name, idx ) => {
 					assert.include( constructorsSequence, name );
 					var iof = false;
-					if ( name === 'Gaia' ) {
-						debugger;
-					}
+					// if ( name === 'Gaia' ) {
+					// 	debugger;
+					// }
 
 					if ( name === 'Object' ) {
 						iof = evenMore instanceof Object;

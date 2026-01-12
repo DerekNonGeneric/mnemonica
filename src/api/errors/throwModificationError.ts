@@ -3,8 +3,6 @@
 import { constants } from '../../constants';
 const {
 	odp,
-	SymbolReplaceUranus,
-	// SymbolConstructorName
 } = constants;
 
 import { ErrorsTypes } from '../../descriptors/errors';
@@ -82,10 +80,18 @@ export const throwModificationError = function ( this: any, error: any ) {
 
 	self.InstanceModificator = makeInstanceModificator( self );
 
-	// Constructor Invocation Itself
 	const erroredInstance = new self.InstanceModificator();
 
-	erroredInstance[ SymbolReplaceUranus ]( error );
+	let errorProto: any = Reflect.getPrototypeOf( erroredInstance );
+	while ( errorProto ) {
+		const testToProto = Reflect.getPrototypeOf( errorProto );
+		if (testToProto === null) {
+			break;
+		}
+		errorProto = testToProto;
+	}
+
+	Reflect.setPrototypeOf( errorProto, error);
 
 	const stack: string[] = [];
 

@@ -55,8 +55,9 @@ var __setFunctionName = (this && this.__setFunctionName) || function (f, name, p
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.myOtherInstance = exports.myDecoratedSubSubInstance = exports.myDecoratedSubInstance = exports.myDecoratedInstance = void 0;
 var __1 = require("..");
+// debugger;
 var MyDecoratedClass = function () {
-    var _classDecorators = [(0, __1.decorate)(undefined, {}, { strictChain: false })];
+    var _classDecorators = [(0, __1.decorate)()];
     var _classDescriptor;
     var _classExtraInitializers = [];
     var _classThis;
@@ -77,7 +78,7 @@ var MyDecoratedClass = function () {
     return MyDecoratedClass = _classThis;
 }();
 var MyDecoratedSubClass = function () {
-    var _classDecorators = [(0, __1.decorate)(MyDecoratedClass)];
+    var _classDecorators = [(0, __1.decorate)(MyDecoratedClass, { strictChain: false })];
     var _classDescriptor;
     var _classExtraInitializers = [];
     var _classThis;
@@ -131,7 +132,10 @@ var MyDecoratedSubSubClass = function () {
 exports.myDecoratedSubSubInstance = (0, __1.apply)(exports.myDecoratedSubInstance, MyDecoratedSubSubClass);
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
+// eslint-disable-next-line no-unused-vars
 var MyOtherFn = MyDecoratedClass.define('MyOtherFn', function () {
     this.prop = 321;
 });
+// debugger;
 exports.myOtherInstance = (0, __1.apply)(exports.myDecoratedInstance, MyOtherFn);
+//# sourceMappingURL=decorate.js.map
