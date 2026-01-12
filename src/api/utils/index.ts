@@ -30,14 +30,17 @@ const CreationHandler = function (this: object & { constructor: NewableFunction 
 	// so we will not follow the rule
 	// if (constructionAnswer instanceof types[TypeName]) {
 	// and instead follow the line below
-	if (this instanceof Promise) {
-		return this;
-	}
+
 	// but if it is not an instace of Object ... so ...
 	// if ( constructionAnswer instanceof Object )
 	// if (constructionAnswer instanceof this.constructor)
 	// will fall the on post processing
 	return constructionAnswer;
+
+	// TODO: this check was not covered with tests
+	// if (this instanceof Promise) {
+	// 	return this;
+	// }
 };
 
 import compileNewModificatorFunctionBody from '../types/compileNewModificatorFunctionBody';
@@ -173,7 +176,6 @@ const findSubTypeFromParent = (instance: parentSub, subType: string): parentSub 
 	// if (!instance.__subtypes__) {
 
 	// if ( !instance.__type__ ) {
-
 	// 	// mocha + chai makes .inspect 4 Shaper class
 	// 	// or .showDiff if something wrong with constructor
 	// 	// debugger;

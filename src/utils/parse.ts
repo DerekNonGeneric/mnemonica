@@ -6,12 +6,11 @@ const {
 	WRONG_ARGUMENTS_USED
 } = ErrorsTypes;
 
-import { constants } from '../constants';
-const {
-	MNEMONICA,
-	SymbolConstructorName
-} = constants;
-
+// import { constants } from '../constants';
+// const {
+// 	MNEMONICA,
+// 	SymbolConstructorName
+// } = constants;
 
 import { extract } from './extract';
 
@@ -44,12 +43,14 @@ export const parse = ( self: any ): any => {
 	const joint: any = extract( Object.assign( {}, proto ) );
 	delete joint.constructor;
 
-	let parent;
-	if ( protoProto[ SymbolConstructorName ] === MNEMONICA ) {
-		parent = protoProto;
-	} else {
-		parent = parse( Reflect.getPrototypeOf( protoProto ) );
-	}
+	const parent = protoProto;
+	// TODO: deep parse
+	// let parent;
+	// if ( protoProto[ SymbolConstructorName ] === MNEMONICA ) {
+	// 	parent = parse( protoProto );
+	// } else {
+	// 	parent = Reflect.getPrototypeOf( protoProto );
+	// }
 
 	return {
 

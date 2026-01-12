@@ -146,8 +146,8 @@ const tests = ( opts ) => {
 
 		Object.keys( results ).forEach( key => {
 			compare( results[ key ], samples[ key ] );
-			// TODO: check reversed
-			// compare( samples[ key ], results[ key ], key );
+			// TODO: it was reversed, though now it is not working
+			// compare( samples[ key ], results[ key ] );
 		} );
 
 		const checksCount = 25;

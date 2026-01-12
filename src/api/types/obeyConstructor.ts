@@ -22,7 +22,7 @@ export const obey = (existentInstance: any, ModificatorType: any) => {
 			break;
 		}
 	}
-	if (existentInstance === null || !(existentInstance instanceof Object)) {
+	if (!(existentInstance.constructor instanceof Function)) {
 		return;
 	}
 	Reflect.setPrototypeOf(protoConstructor, existentInstance.constructor);

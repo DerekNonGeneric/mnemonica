@@ -104,7 +104,6 @@ const tests = ( opts ) => {
 			const constructorsSequence = collectConstructors( evenMore, true );
 			it( 'must be ok', () => {
 				// assert.equal(constructorsSequence.length, 25);
-				debugger;
 				assert.equal( constructorsSequence.length, 20 );
 				assert.deepEqual( constructorsSequence, [
 					'EvenMore',

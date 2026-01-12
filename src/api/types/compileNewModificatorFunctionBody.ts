@@ -34,6 +34,7 @@
 
 const getClassConstructor = ( ConstructHandler: any, CreationHandler: any, ) => {
 	return class extends ConstructHandler {
+		// oxlint-disable-next-line constructor-super
 		constructor ( ...args: any[] ) {
 			const answer = super( ...args );
 			// debugger;

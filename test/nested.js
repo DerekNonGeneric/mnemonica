@@ -59,9 +59,8 @@ const tests = ( opts ) => {
 
 	describe( 'nested .getPrototypeOf(instance.constructor)', () => {
 		it( 'must follow constructor inheritance for classes', () => {
-			debugger;
-			// const protoConstructor = ogp( ogp( userPL2.constructor ) );
-			// assert.equal( protoConstructor, user.constructor );
+			const protoConstructor = ogp( ogp( userPL2.constructor ) );
+			assert.equal( protoConstructor, user.constructor );
 		} );
 	} );
 

@@ -199,7 +199,7 @@ const makeSubTypeProxy = function (subtype: any, inheritedInstance: any) {
 	return subtypeProxy;
 };
 
-const prepareSubtypeForConstruction = function (subtypeName: any, inheritedInstance: any) {
+const prepareSubtypeForConstruction = function (subtypeName: string, inheritedInstance: any) {
 	// prototype of proxy
 	const propInstance: any = Reflect.getPrototypeOf(inheritedInstance);
 

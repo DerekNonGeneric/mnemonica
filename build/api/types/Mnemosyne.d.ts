@@ -1,7 +1,7 @@
 import { ConstructorFunction } from '../../types';
 declare const _default: {
     readonly createMnemosyne: (Uranus: unknown) => any;
-    readonly prepareSubtypeForConstruction: (subtypeName: any, inheritedInstance: any) => ConstructorFunction<{
+    readonly prepareSubtypeForConstruction: (subtypeName: string, inheritedInstance: any) => ConstructorFunction<{
         getExistentAsyncStack: (existentInstance: import("../utils").asyncStack) => unknown;
         postProcessing: (this: any, continuationOf: any) => void;
         makeAwaiter: (this: any, type: any, then: any) => any;

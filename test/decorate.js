@@ -57,7 +57,7 @@ exports.myOtherInstance = exports.myDecoratedSubSubInstance = exports.myDecorate
 var __1 = require("..");
 // debugger;
 var MyDecoratedClass = function () {
-    var _classDecorators = [(0, __1.decorate)({ strictChain: false })];
+    var _classDecorators = [(0, __1.decorate)()];
     var _classDescriptor;
     var _classExtraInitializers = [];
     var _classThis;
@@ -78,7 +78,7 @@ var MyDecoratedClass = function () {
     return MyDecoratedClass = _classThis;
 }();
 var MyDecoratedSubClass = function () {
-    var _classDecorators = [(0, __1.decorate)(MyDecoratedClass)];
+    var _classDecorators = [(0, __1.decorate)(MyDecoratedClass, { strictChain: false })];
     var _classDescriptor;
     var _classExtraInitializers = [];
     var _classThis;

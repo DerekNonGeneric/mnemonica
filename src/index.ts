@@ -61,7 +61,7 @@ export const lookup = function (TypeNestedPath) {
 const $run = function <E extends object, T extends object, S extends Proto<E, T>>(
 	entity: E,
 	Constructor: IDEF<T>,
-	args: unknown[] = []
+	args: unknown[]
 ): {
 		[key in keyof S]: S[key]
 	} {
@@ -69,10 +69,11 @@ const $run = function <E extends object, T extends object, S extends Proto<E, T>
 	// debugger;
 	// @ts-ignore
 	const { TypeName } = Constructor;
-	const Cstr = prepareSubtypeForConstruction(TypeName, entity);
-	if (Cstr === undefined) {
-		throw new TypeError(`Type ${TypeName} is not defined in the current context.`);
-	}
+	const Cstr = prepareSubtypeForConstruction(TypeName, entity) as { new( ...ars: unknown[]): unknown};
+	// TODO: check lines below and if Constructor is not mnemonized ...
+	// if (Cstr === undefined) {
+	// 	throw new TypeError(`Type ${TypeName} is not defined as a .`);
+	// }
 	const result = new Cstr(...args);
 	// @ts-ignore
 	return result;

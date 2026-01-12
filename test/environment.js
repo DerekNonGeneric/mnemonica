@@ -31,7 +31,8 @@ const {
 	setProps
 } = mnemonica;
 
-const dirname = require('path').resolve(__dirname, '../build');
+// next line changed from '../build' to '../src' cause now we use sourceMaps
+const dirname = require('path').resolve(__dirname, '../src');
 const stackCleanerRegExp = new RegExp(dirname);
 
 const tests = (opts) => {
