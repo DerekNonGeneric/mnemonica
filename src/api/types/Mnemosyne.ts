@@ -204,6 +204,10 @@ const prepareSubtypeForConstruction = function (subtypeName: string, inheritedIn
 	const propInstance: any = Reflect.getPrototypeOf(inheritedInstance);
 
 	const props = _getProps(propInstance) as Props;
+	if (!props) {
+		return undefined;
+	}
+
 	const {
 		__type__: {
 			config: {
@@ -260,13 +264,15 @@ const Mnemosyne = function (mnemonica: object | null) {
 	// eslint-disable-next-line @typescript-eslint/no-this-alias
 	const instance = this;
 
-	const Mnemonica: any = function (this: any) {
+	const Mnemonica = function (this: any) {
 		odp(this, SymbolConstructorName, {
 			get () {
 				return MNEMONICA;
 			}
 		});
-	};
+		const _proto = Object.create(null);
+		Reflect.setPrototypeOf(_proto, this);
+	} as ConstructorFunction<typeof MnemonicaProtoProps>;
 
 	Reflect.setPrototypeOf(Mnemonica.prototype, mnemonica);
 
@@ -297,7 +303,6 @@ const Mnemosyne = function (mnemonica: object | null) {
 	});
 
 	const proto = new Mnemonica();
-
 	Reflect.setPrototypeOf(instance, proto);
 
 	// InstanceRoots.set(instance, proto);

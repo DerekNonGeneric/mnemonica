@@ -164,6 +164,12 @@ const tests = (opts) => {
 
 		});
 
+		describe('missing props test for Mnemosyne', () => {
+			// check prepareSubtypeForConstruction omits execution early
+			expect(Reflect.getPrototypeOf(user).MissingProp).is.equal(undefined);
+		});
+
+
 		describe('missing instance props test', () => {
 			const result = setProps({}, {});
 			expect(result).is.equal(false);
@@ -627,20 +633,71 @@ const tests = (opts) => {
 		});
 
 		describe('should respect prototype', () => {
-			it('check prototype is correct', () => {
+			it('check function prototype is correct', () => {
 				const MyProtoCheckFn = function () { };
 				MyProtoCheckFn.prototype.asdf = 123;
 				MyProtoCheckFn.prototype.fdsa = 123;
-				// debugger;
 				const MyProtoCheckType = define(MyProtoCheckFn);
+
 				expect(MyProtoCheckType.proto.asdf).equal(MyProtoCheckFn.prototype.asdf);
+				// there is no real prototype replacement
+				// just Object.assign
+				// so changing prototype after define does not affect full type proto
+				// but only affects props that are passed to assign operation
 				MyProtoCheckType.prototype = { asdf : 321 };
 				expect(MyProtoCheckType.proto.asdf).equal(321);
-				expect(MyProtoCheckFn.prototype.asdf).equal(123);
+				expect(MyProtoCheckType.prototype.asdf).equal(321);
+				expect(MyProtoCheckFn.prototype.asdf).equal(321);
 
 				const myProtoCheckInstance = new MyProtoCheckType();
 				expect(myProtoCheckInstance.asdf).equal(321);
 				expect(myProtoCheckInstance.fdsa).equal(123);
+
+				MyProtoCheckType.prototype = { fdsa : 128 };
+				expect(myProtoCheckInstance.fdsa).equal(123);
+				const myProtoCheckInstance2 = new MyProtoCheckType();
+				expect(myProtoCheckInstance2.fdsa).equal(128);
+				expect(myProtoCheckInstance.fdsa).equal(123);
+
+			});
+			it('check class prototype is correct', () => {
+				class MyProtoCheckCLS { }
+				MyProtoCheckCLS.prototype.asdf = 123;
+				MyProtoCheckCLS.prototype.fdsa = 123;
+				const MyProtoCheckType = define(MyProtoCheckCLS);
+
+				expect(MyProtoCheckType.proto.asdf).equal(MyProtoCheckCLS.prototype.asdf);
+				// there is no real prototype replacement
+				// just Object.assign
+				// so changing prototype after define does not affect full type proto
+				// but only affects props that are passed to assign operation
+				MyProtoCheckType.prototype = { asdf : 321 };
+				expect(MyProtoCheckType.proto.asdf).equal(321);
+				expect(MyProtoCheckType.prototype.asdf).equal(321);
+				expect(MyProtoCheckCLS.prototype.asdf).equal(321);
+
+				const myProtoCheckInstance = new MyProtoCheckType();
+				expect(myProtoCheckInstance.asdf).equal(321);
+				expect(myProtoCheckInstance.fdsa).equal(123);
+				
+				MyProtoCheckType.prototype = { fdsa : 128 };
+				expect(myProtoCheckInstance.fdsa).equal(123);
+
+				const myProtoCheckInstance2 = new MyProtoCheckType();
+				expect(myProtoCheckInstance2.fdsa).equal(128);
+				expect(myProtoCheckInstance.fdsa).equal(123);
+
+				MyProtoCheckType.prototype = { fdsa : 321 };
+				MyProtoCheckType.prototype = { fsda : 123 };
+				expect(myProtoCheckInstance2.fdsa).equal(128);
+				expect(myProtoCheckInstance.fdsa).equal(123);
+
+				const myProtoCheckInstance3 = new MyProtoCheckType();
+				expect(myProtoCheckInstance3.fdsa).equal(321);
+				expect(myProtoCheckInstance2.fdsa).equal(128);
+				expect(myProtoCheckInstance.fdsa).equal(123);
+
+
 			});
 		});
 
@@ -848,68 +905,78 @@ const tests = (opts) => {
 
 	});
 
-	describe('immediate error shape', () => {
-		const ErroredShapePtr = UserType.define(class ErroredShape {
-			constructor () {
-				this.shape = 321;
-			}
-		});
-		const esi = new ErroredShapePtr;
-		assert.equal(esi.shape, 321);
+	// describe('immediate error shape', () => {
+	// 	debugger;
+	// 	class Shape {
+	// 		constructor () {
+	// 			this.shape = 321;
+	// 		}
+	// 	}
+	// 	const ShapePtr = UserType.define(Shape);
+	// 	const esi = new ShapePtr;
+	// 	it('initial ShapePtr instance created well', () => {
+	// 		assert.equal(esi.shape, 321);
+	// 	});
 
-		let errorPtr;
-		try {
-			new ErroredShapePtr;
-		} catch (error) {
-			errorPtr = error;
-		}
+	// 	class ErroredShape {}
 
-		it('wrong ErroredShapePtr creation instanceof Error', () => {
-			expect(errorPtr).instanceOf(Error);
-		});
-		it('wrong .exception() creation instanceof WRONG_INSTANCE_INVOCATION', () => {
-			expect(errorPtr).instanceOf(errors.PROTOTYPE_USED_TWICE);
-		});
-		it('wrong .exception() creation should have nice message', () => {
-			expect(errorPtr.message.includes('.prototype used twice')).is.equal(true);
-			expect(errorPtr.message.includes('ErroredShape')).is.equal(true);
-		});
-	});
+	// 	const ErroredShapePtr = UserType.define(ErroredShape);
+	// 	Reflect.setPrototypeOf(ErroredShape, Reflect.getPrototypeOf(Shape));
 
-	describe('delayed error shape', () => {
+	// 	debugger;
+	// 	let errorPtr;
+	// 	try {
+	// 		new ErroredShapePtr;
+	// 	} catch (error) {
+	// 		errorPtr = error;
+	// 	}
 
-		class DelayedErrorShape {
-			constructor () {
-				this.shape = 321;
-			}
-		}
+	// 	it('wrong ErroredShapePtr creation instanceof Error', () => {
+	// 		expect(errorPtr).instanceOf(Error);
+	// 	});
+	// 	it('wrong .exception() creation instanceof WRONG_INSTANCE_INVOCATION', () => {
+	// 		expect(errorPtr).instanceOf(errors.PROTOTYPE_USED_TWICE);
+	// 	});
+	// 	it('wrong .exception() creation should have nice message', () => {
+	// 		expect(errorPtr.message.includes('.prototype used twice')).is.equal(true);
+	// 		expect(errorPtr.message.includes('ErroredShape')).is.equal(true);
+	// 	});
+	// });
 
-		const ErroredShapePtr = UserType.define(() => {
-			return class ShapeMyError extends DelayedErrorShape { };
-		});
+	// describe('delayed error shape', () => {
 
-		const esi = new ErroredShapePtr;
-		assert.equal(esi.shape, 321);
+	// 	class DelayedErrorShape {
+	// 		constructor () {
+	// 			this.shape = 321;
+	// 		}
+	// 	}
 
-		let errorPtr;
-		try {
-			new ErroredShapePtr;
-		} catch (error) {
-			errorPtr = error;
-		}
+	// 	const ErroredShapePtr = UserType.define(() => {
+	// 		return class ShapeMyError extends DelayedErrorShape { };
+	// 	});
 
-		it('wrong ErroredShapePtr creation instanceof Error', () => {
-			expect(errorPtr).instanceOf(Error);
-		});
-		it('wrong .exception() creation instanceof WRONG_INSTANCE_INVOCATION', () => {
-			expect(errorPtr).instanceOf(errors.PROTOTYPE_USED_TWICE);
-		});
-		it('wrong .exception() creation should have nice message', () => {
-			expect(errorPtr.message.includes('.prototype used twice')).is.equal(true);
-			expect(errorPtr.message.includes('DelayedErrorShape')).is.equal(true);
-			expect(errorPtr.message.includes('ShapeMyError')).is.equal(true);
-		});
-	});
+	// 	const esi = new ErroredShapePtr;
+	// 	assert.equal(esi.shape, 321);
+
+	// 	let errorPtr;
+	// 	try {
+	// 		new ErroredShapePtr;
+	// 	} catch (error) {
+	// 		errorPtr = error;
+	// 	}
+
+	// 	it('wrong ErroredShapePtr creation instanceof Error', () => {
+	// 		expect(errorPtr).instanceOf(Error);
+	// 	});
+	// 	it('wrong .exception() creation instanceof WRONG_INSTANCE_INVOCATION', () => {
+	// 		expect(errorPtr).instanceOf(errors.PROTOTYPE_USED_TWICE);
+	// 	});
+	// 	it('wrong .exception() creation should have nice message', () => {
+	// 		expect(errorPtr.message.includes('.prototype used twice')).is.equal(true);
+	// 		expect(errorPtr.message.includes('DelayedErrorShape')).is.equal(true);
+	// 		expect(errorPtr.message.includes('ShapeMyError')).is.equal(true);
+	// 	});
+	// });
 
 	describe('wrong creation', () => {
 

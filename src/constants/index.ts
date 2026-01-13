@@ -14,6 +14,7 @@ const SymbolParentType = Symbol( 'Parent of this SubType Collection' );
 const SymbolConstructorName = Symbol( 'Defined Constructor Name' );
 
 const SymbolConfig = Symbol( 'Mnemonica Config Data' );
+// const SymbolUsed = Symbol( '.prototype used twice' );
 
 // etc...
 const TYPE_TITLE_PREFIX = 'modificator of : ';
@@ -36,7 +37,7 @@ const ErrorMessages = {
 	FLOW_CHECKER_REDEFINITION  : 'attempt to re-define flow checker callback',
 	OPTIONS_ERROR              : 'options must be an object or a string',
 	WRONG_STACK_CLEANER        : 'wrong stack cleaner instanceof',
-	PROTOTYPE_USED_TWICE       : '.prototype used twice',
+	// PROTOTYPE_USED_TWICE       : '.prototype used twice',
 
 };
 
@@ -97,6 +98,10 @@ export const constants = {
 	get 'SymbolConfig' () {
 		return SymbolConfig;
 	},
+
+	// get 'SymbolUsed' () {
+	// 	return SymbolUsed;
+	// },
 
 	// constants
 	get 'MNEMONICA' () {

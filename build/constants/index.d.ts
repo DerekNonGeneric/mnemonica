@@ -24,6 +24,5 @@ export declare const constants: {
         FLOW_CHECKER_REDEFINITION: string;
         OPTIONS_ERROR: string;
         WRONG_STACK_CLEANER: string;
-        PROTOTYPE_USED_TWICE: string;
     };
 };

@@ -1,6 +1,6 @@
 'use strict';
 
-export default function (obey: CallableFunction) {
+export default function () {
 
 	const CreateInstanceModificator = function (
 		this: object,
@@ -39,8 +39,6 @@ export default function (obey: CallableFunction) {
 		// and set the prototype inherited
 		// Reflect.setPrototypeOf(ModificatorType.prototype, inherited);
 		Reflect.setPrototypeOf(ModificatorType.prototype, Mnemosyne);
-
-		obey(existentInstance, ModificatorType);
 
 		return ModificatorType;
 
