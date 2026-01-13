@@ -4,7 +4,7 @@
 const { mnemonica } = require('..');
 const { defaultOptions: { ModificationConstructor } } = mnemonica;
 
-module.exports = function (obey) {
+module.exports = function () {
 
 	const CreateInstanceModificatorAncient200XthWay = function (
 		ModificatorType,
@@ -52,7 +52,6 @@ module.exports = function (obey) {
 						enumerable : false
 					});
 
-					obey(existentInstance, ModificatorType);
 
 					return ModificatorType;
 
@@ -96,8 +95,7 @@ module.exports = function (obey) {
 				process.exit(1);
 			}
 
-
-			return ModificationConstructor(obey)
+			return ModificationConstructor()
 				.call(
 					existentInstance,
 					ModificatorType,

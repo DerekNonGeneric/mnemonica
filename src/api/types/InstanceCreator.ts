@@ -30,8 +30,6 @@ import { _getProps, _setSelf, Props } from './Props';
 
 import { makeInstanceModificator } from './InstanceModificator';
 
-import { obey } from './obeyConstructor';
-
 const invokePreHooks = function ( this: any ) {
 
 	const {
@@ -249,7 +247,7 @@ export const InstanceCreator = function ( this: any, type: any, existentInstance
 	} = config;
 
 	// eslint-disable-next-line new-cap
-	const mc = ModificationConstructor( obey );
+	const mc = ModificationConstructor();
 
 	// eslint-disable-next-line @typescript-eslint/no-this-alias
 	const self = this;

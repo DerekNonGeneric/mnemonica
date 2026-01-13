@@ -21,14 +21,14 @@ const tests = ( opts ) => {
 		it( 'check invocations count', () => {
 			assert.equal( 8, userTypeHooksInvocations.length );
 			// +2
-			assert.equal( 173, typesFlowCheckerInvocations.length );
+			assert.equal( 175, typesFlowCheckerInvocations.length );
 			// +1
 			assert.equal( 94, typesPreCreationInvocations.length );
 			// there are two errors on creation
 			// checked before
 			// that is why, and with clones
 			// +1
-			assert.equal( 158, typesPostCreationInvocations.length );
+			assert.equal( 162, typesPostCreationInvocations.length );
 		} );
 	} );
 

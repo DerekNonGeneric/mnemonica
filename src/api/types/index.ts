@@ -212,10 +212,16 @@ const defineUsingFunction = function (
 
 	config.asClass = asClass;
 
-	const proto = hop( constructHandler, 'prototype' ) &&
-		( constructHandler.prototype instanceof Object ) ?
-		Object.assign( {}, constructHandler.prototype ) :
-		{};
+	const proto = (
+		hop( constructHandler, 'prototype' ) &&
+		( constructHandler.prototype instanceof Object  )
+	) ? constructHandler.prototype : {};
+	
+	// let proto = {};
+	// if (hop( constructHandler, 'prototype' ) && constructHandler.prototype instanceof Object ) {
+	// 	proto = Object.assign( {}, constructHandler.prototype );
+	// 	Object.setPrototypeOf( proto, constructHandler.prototype );
+	// }
 
 	return new TypeDescriptor(
 		this,
@@ -233,6 +239,8 @@ const defineUsingFunction = function (
 export const define: any = function ( this: any, subtypes: any, TypeOrTypeName: string | any, constructHandlerOrConfig: any, config: object ) {
 
 	if ( typeof TypeOrTypeName === 'function' ) {
+		// TODO: if ( hop( TypeOrTypeName, 'name' ) ) {
+		// TODO: if ( hop( TypeOrTypeName.constructor, 'name' ) ) {
 		if ( TypeOrTypeName.name ) {
 			return define.call( this, subtypes, TypeOrTypeName.name, TypeOrTypeName, config );
 		} else {

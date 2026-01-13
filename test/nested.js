@@ -57,12 +57,15 @@ const tests = ( opts ) => {
 		} );
 	} );
 
-	describe( 'nested .getPrototypeOf(instance.constructor)', () => {
-		it( 'must follow constructor inheritance for classes', () => {
-			const protoConstructor = ogp( ogp( userPL2.constructor ) );
-			assert.equal( protoConstructor, user.constructor );
-		} );
-	} );
+	// this test is disabled due to reusing of constructors
+	// for nested types, so we disabled obeying of constructors
+	// which breaks this test
+	// describe( 'nested .getPrototypeOf(instance.constructor)', () => {
+	// 	it( 'must follow constructor inheritance for classes', () => {
+	// 		const protoConstructor = ogp( ogp( userPL2.constructor ) );
+	// 		assert.equal( protoConstructor, user.constructor );
+	// 	} );
+	// } );
 
 	describe( 'nested type with new style check', () => {
 		it( 'actually do construction', () => {

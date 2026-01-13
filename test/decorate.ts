@@ -1,14 +1,34 @@
+// npx tsc --sourceMap ./test/decorate.ts
+// npx tsc --target es6 --moduleResolution NodeNext --module NodeNext --sourceMap ./test/decorate.ts
+
 import { decorate, apply, ConstructorFunction } from '..';
+// import { Strict } from 'typeomatica';
+import { BaseClass } from 'typeomatica';
 
 // debugger;
 
+class Some {
+	field = 333;
+}
+
+Object.setPrototypeOf(Some.prototype, new BaseClass);
+
+
+const some = new Some;
+console.log(some);
+
 @decorate()
+// @Strict()
+// class MyDecoratedClass {
 class MyDecoratedClass {
 	field: number;
 	constructor () {
+		// debugger;
 		this.field = 123;
 	}
 }
+
+Object.setPrototypeOf(MyDecoratedClass.prototype, new BaseClass);
 
 @decorate(MyDecoratedClass, { strictChain : false })
 class MyDecoratedSubClass {
@@ -18,7 +38,9 @@ class MyDecoratedSubClass {
 	}
 }
 
+debugger;
 export const myDecoratedInstance = new MyDecoratedClass;
+export const myDecoratedInstance2 = new MyDecoratedClass;
 export const myDecoratedSubInstance = apply(myDecoratedInstance, MyDecoratedSubClass);
 
 const MyFn = function () {
