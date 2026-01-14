@@ -249,11 +249,11 @@ const tests = ( opts ) => {
 			expect( lastIndex ).equal( 1 );
 			stackTrack.forEach( line => {
 				let newIndex = __stack__.indexOf( line );
-				expect( newIndex > 0 ).is.true;
-				expect( newIndex > lastIndex ).is.true;
+				expect( newIndex > 0 ).is.equal(true);
+				expect( newIndex > lastIndex ).is.equal(true);
 				lastIndex = newIndex;
 			} );
-			expect( __stack__.indexOf( 'async.chain.js:1' ) > 0 ).is.true;
+			expect( __stack__.indexOf( 'async.chain.js:1' ) > 0 ).is.equal(true);
 
 		} );
 
@@ -263,7 +263,7 @@ const tests = ( opts ) => {
 				stack
 			} = wrongSyncTypeErr;
 			expect( stack.indexOf( stackstart ) ).equal( 1 );
-			expect( stack.indexOf( 'async.chain.js:1' ) > 0 ).is.true;
+			expect( stack.indexOf( 'async.chain.js:1' ) > 0 ).is.equal(true);
 			expect( wrongSyncTypeErr ).instanceOf( Error );
 			expect( wrongSyncTypeErr ).instanceOf( WrongSyncType );
 			expect( wrongSyncTypeErr ).instanceOf( errors.WRONG_MODIFICATION_PATTERN );
@@ -279,7 +279,7 @@ const tests = ( opts ) => {
 				stack
 			} = wrongAsyncTypeErr;
 			expect( stack.indexOf( stackstart ) ).equal( 1 );
-			expect( stack.indexOf( 'async.chain.js:2' ) > 0 ).is.true;
+			expect( stack.indexOf( 'async.chain.js:2' ) > 0 ).is.equal(true);
 			expect( wrongAsyncTypeErr ).instanceOf( Error );
 			expect( wrongAsyncTypeErr ).instanceOf( WrongAsyncType );
 			expect( wrongAsyncTypeErr ).instanceOf( errors.WRONG_MODIFICATION_PATTERN );
@@ -393,9 +393,9 @@ const tests = ( opts ) => {
 		} );
 
 		it( 'shold have props', () => {
-			expect( sleepInstance.slept ).is.true;
-			expect( sleepError.slept ).is.true;
-			expect( otherSleepInstance.slept ).is.true;
+			expect( sleepInstance.slept ).is.equal(true);
+			expect( sleepError.slept ).is.equal(true);
+			expect( otherSleepInstance.slept ).is.equal(true);
 		} );
 
 		it( 'sleepError shold be instanceof Error', () => {
@@ -459,7 +459,7 @@ const tests = ( opts ) => {
 
 		it( 'anotherSleepInstance shold be instanceof SleepType', () => {
 			const insof = anotherSleepInstance instanceof SleepType;
-			expect( insof ).is.true;
+			expect( insof ).is.equal(true);
 		} );
 		it( 'anotherSleepInstance shold be instanceof Error', () => {
 			expect( anotherSleepInstance ).instanceOf( Error );

@@ -304,9 +304,9 @@ const NestedConstruct = Main.define('NestedConstruct', function () {
 	if (new.target) {
 		new_targets.push(this.constructor.name);
 	}
-	// 1. direct
+	// 1. ↓↓↓ direct error explanation ↓↓↓
 	// throw new Error('Nested Constructor Special Error');
-	// 2. sub
+	// 2. but we go to sub
 	this.nested = new this.NestedSubError(123);
 });
 NestedConstruct.define('NestedSubError', function (...args) {
@@ -751,23 +751,23 @@ describe('Main Test', () => {
 		});
 
 		it('.SubTypes definition is correct 20XX', () => {
-			expect(hop(user, 'UserTypePL1')).is.false;
-			expect(hop(user, 'UserTypePL2')).is.false;
+			expect(hop(user, 'UserTypePL1')).is.equal(false);
+			expect(hop(user, 'UserTypePL2')).is.equal(false);
 		});
 		it('.SubTypes definition is correct  20XX First Child', () => {
-			expect(getProps(user).__subtypes__.has('UserTypePL1')).is.true;
-			expect(getProps(user).__subtypes__.has('UserTypePL2')).is.true;
+			expect(getProps(user).__subtypes__.has('UserTypePL1')).is.equal(true);
+			expect(getProps(user).__subtypes__.has('UserTypePL2')).is.equal(true);
 
 
 			const oogpuser = ogp(user);
 
 			// 0.8.4 -- changed interface, no more methods inside of prototype chain
-			// expect(hop(oogpuser, 'UserTypePL1')).is.true;
-			// expect(hop(oogpuser, 'UserTypePL2')).is.true;
+			// expect(hop(oogpuser, 'UserTypePL1')).is.equal(true);
+			// expect(hop(oogpuser, 'UserTypePL2')).is.equal(true);
 			// but we still can check __subtypes__
 
-			expect(getProps(oogpuser).__subtypes__.has('UserTypePL1')).is.true;
-			expect(getProps(oogpuser).__subtypes__.has('UserTypePL2')).is.true;
+			expect(getProps(oogpuser).__subtypes__.has('UserTypePL1')).is.equal(true);
+			expect(getProps(oogpuser).__subtypes__.has('UserTypePL2')).is.equal(true);
 		});
 
 
@@ -924,10 +924,10 @@ describe('Main Test', () => {
 					expect(() => {
 						collected = collectConstructors(value, true);
 					}).to.not.throw();
-					expect(Array.isArray(collected)).is.true;
+					expect(Array.isArray(collected)).is.equal(true);
 					// ! typeof object
 					if (idx < 9) {
-						expect(collected.length === 0).is.true;
+						expect(collected.length === 0).is.equal(true);
 					}
 				});
 			});
@@ -1294,12 +1294,12 @@ describe('Main Test', () => {
 					expect(asyncInstanceFork).instanceof(AsyncType);
 					expect(asyncInstanceFork).instanceof(AsyncType);
 
-					expect(typeof asyncInstanceDirect.on === 'function').is.true;
-					// expect(ogp(ogp(ogp(asyncInstanceDirect[ SymbolGaia ]))) === process).is.true;
-					// expect(asyncInstanceDirect[ SymbolGaia ][ MNEMONICA ] === URANUS).is.true;
-					expect(typeof asyncInstanceDirectApply.on === 'function').is.true;
-					// expect(ogp(ogp(ogp(asyncInstanceDirectApply[ SymbolGaia ]))) === process).is.true;
-					// expect(asyncInstanceDirectApply[ SymbolGaia ][ MNEMONICA ] === URANUS).is.true;
+					expect(typeof asyncInstanceDirect.on === 'function').is.equal(true);
+					// expect(ogp(ogp(ogp(asyncInstanceDirect[ SymbolGaia ]))) === process).is.equal(true);
+					// expect(asyncInstanceDirect[ SymbolGaia ][ MNEMONICA ] === URANUS).is.equal(true);
+					expect(typeof asyncInstanceDirectApply.on === 'function').is.equal(true);
+					// expect(ogp(ogp(ogp(asyncInstanceDirectApply[ SymbolGaia ]))) === process).is.equal(true);
+					// expect(asyncInstanceDirectApply[ SymbolGaia ][ MNEMONICA ] === URANUS).is.equal(true);
 
 					expect(nestedAsyncInstance).instanceof(AsyncType);
 					expect(nestedAsyncInstance).instanceof(NestedAsyncType);

@@ -206,12 +206,23 @@ const isClass = (fn: CallableFunction) => {
 	// if (typeof fn !== 'function') {
 	// 	return false;
 	// }
+
+	// class prototype is always object
 	if (!(fn.prototype instanceof Object)) {
 		return false;
 	}
+
+	// class prototype.constructor cannot be re-defined (usually)
+	// but for functions user may re-assign it easily
+	// just assigning the way .prototype = {}
+	// and they 99.9% do this, cause nobody cares
+	// but we are checking if this is class, so it works ...
 	if (fn.prototype.constructor !== fn) {
 		return false;
 	}
+
+	// and the most unknown thing is that,
+	// cause for functions it it writeable )))
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	return Reflect.getOwnPropertyDescriptor(fn, 'prototype')!.writable === false;
 };

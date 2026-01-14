@@ -328,7 +328,7 @@ const tests = (opts) => {
 			});
 			it('.SubTypes definition is correct Regular FirstChild', () => {
 				// 0.8.4 -- changed interface, no more methods inside of prototype chain
-				// expect(Object.getPrototypeOf(Object.getPrototypeOf(userTC)).hasOwnProperty('WithoutPassword')).is.true;
+				// expect(Object.getPrototypeOf(Object.getPrototypeOf(userTC)).hasOwnProperty('WithoutPassword')).is.equal(true);
 				const { __subtypes__ } = getProps(userTC);
 				expect(__subtypes__.has('WithoutPassword')).is.equal(true);
 			});
@@ -343,8 +343,8 @@ const tests = (opts) => {
 				const { __subtypes__: ms } = getProps(moreOver);
 				expect(ms.has('OverMore')).is.equal(true);
 				// 0.8.4 -- changed interface, no more methods inside of prototype chain
-				// expect(Object.getPrototypeOf(Object.getPrototypeOf(overMore)).hasOwnProperty('EvenMore')).is.true;
-				// expect(Object.getPrototypeOf(Object.getPrototypeOf(moreOver)).hasOwnProperty('OverMore')).is.true;
+				// expect(Object.getPrototypeOf(Object.getPrototypeOf(overMore)).hasOwnProperty('EvenMore')).is.equal(true);
+				// expect(Object.getPrototypeOf(Object.getPrototypeOf(moreOver)).hasOwnProperty('OverMore')).is.equal(true);
 			});
 
 			it('SymbolDefaultTypesCollection shoud be default', () => {
@@ -379,14 +379,19 @@ const tests = (opts) => {
 			});
 
 			it('decorate works correctly', () => {
-				// debugger;
-				expect(myDecoratedInstance.field).equal(123);
-				expect(myDecoratedSubInstance.sub_field).equal(321);
-				expect(myDecoratedSubInstance.field).equal(123);
-				expect(myOtherInstance.prop).equal(321);
-				expect(myDecoratedSubSubInstance.sub_sub_field).equal(321);
-				expect(myDecoratedSubSubInstance.sub_field).equal(321);
-				expect(myDecoratedSubSubInstance.field).equal(123);
+				const ogp = Object.getPrototypeOf;
+				expect(myDecoratedInstance.field).instanceOf(Object);
+				expect(myDecoratedInstance.field.valueOf()).equal(123);
+
+				expect(myDecoratedSubInstance.sub_field).instanceOf(Object);
+				expect(myDecoratedSubInstance.sub_field.valueOf()).equal(321);
+				expect(ogp(ogp(ogp(myDecoratedSubInstance))).field.valueOf()).equal(123);
+				expect(myOtherInstance.prop.valueOf()).equal(321);
+
+				expect(myDecoratedSubSubInstance.sub_sub_field).instanceOf(Object);
+				expect(myDecoratedSubSubInstance.sub_sub_field.valueOf()).equal(321);
+				expect(ogp(ogp(ogp(myDecoratedSubSubInstance))).sub_field.valueOf()).equal(321);
+				expect(ogp(ogp(ogp(ogp(ogp(ogp(myDecoratedSubSubInstance)))))).field.valueOf()).equal(123);
 			});
 
 			it('apply & call works correctly', () => {
@@ -535,7 +540,8 @@ const tests = (opts) => {
 				// set hook inteception, so error instance returned instead of throwing;
 				return true;
 			});
-			let errored = new BadType({});
+			// debugger;
+			const errored = new BadType({});
 			const stackstart = '<-- creation of [ BadType ] traced -->';
 			it('should respect the rules', () => {
 				expect(errored).instanceOf(Error);

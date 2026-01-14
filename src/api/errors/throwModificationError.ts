@@ -3,7 +3,9 @@
 import { constants } from '../../constants';
 const {
 	odp,
+	MNEMONICA,
 } = constants;
+
 
 import { ErrorsTypes } from '../../descriptors/errors';
 const {
@@ -19,7 +21,9 @@ const {
 
 import { utils } from '../../utils';
 const {
-	parse
+	parse,
+	parent,
+	extract
 } = utils;
 
 import { makeInstanceModificator } from '../types/InstanceModificator';
@@ -80,18 +84,29 @@ export const throwModificationError = function ( this: any, error: any ) {
 
 	self.InstanceModificator = makeInstanceModificator( self );
 
+	// let erroredInstance = new self.InstanceModificator();
 	const erroredInstance = new self.InstanceModificator();
 
 	let errorProto: any = Reflect.getPrototypeOf( erroredInstance );
 	while ( errorProto ) {
-		const testToProto = Reflect.getPrototypeOf( errorProto );
-		if (testToProto === null) {
+		const testToProto = Reflect.getPrototypeOf( errorProto ) as object;
+		if (testToProto.constructor.name === MNEMONICA && Object.hasOwnProperty.call(testToProto, 'constructor')) {
 			break;
 		}
 		errorProto = testToProto;
 	}
 
 	Reflect.setPrototypeOf( errorProto, error);
+	// const result = Reflect.setPrototypeOf( errorProto, error);
+	// if (result === false) {
+	// 	try {
+	// 		Object.setPrototypeOf(errorProto, error);
+	// 	} catch (_err) {
+	// 		console.error(_err);
+	// 		erroredInstance = Object.create(error);
+	// 	}
+	// }
+	// console.log(result);
 
 	const stack: string[] = [];
 
@@ -137,16 +152,20 @@ export const throwModificationError = function ( this: any, error: any ) {
 
 	self.inheritedInstance = erroredInstance;
 
+	// if (result) {
+
 	// if hooks had some interception: start
 	const results = self.invokePostHooks();
 	const {
 		type,
 		collection,
 	} = results;
-
 	if ( type.has( true ) || collection.has( true ) ) {
 		return;
 	}
+
+	// }
+
 	// if hooks had some interception: stop
 
 	odp( erroredInstance, 'args', {
@@ -170,8 +189,8 @@ export const throwModificationError = function ( this: any, error: any ) {
 	odp( erroredInstance, 'extract', {
 		get () {
 			return () => {
-				const parent = erroredInstance.parent();
-				return parent.extract();
+				const _parent = parent(erroredInstance);
+				return extract(_parent);
 			};
 		}
 	} );

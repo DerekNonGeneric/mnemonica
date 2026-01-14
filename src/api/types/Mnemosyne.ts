@@ -27,6 +27,10 @@ import { InstanceCreator } from './InstanceCreator';
 
 import { _getProps, Props } from './Props';
 
+const getDefaultPrototype = () => {
+	return Object.create(null);
+};
+
 // const InstanceRoots = new WeakMap;
 
 const MnemonicaProtoProps = {
@@ -259,7 +263,7 @@ const mnemosyneProxyHandlerGet = (target: any, prop: string, receiver: any) => {
 	return subtype || result;
 };
 
-const Mnemosyne = function (mnemonica: object | null) {
+const Mnemosyne = function (mnemonica: object) {
 
 	// eslint-disable-next-line @typescript-eslint/no-this-alias
 	const instance = this;
@@ -270,11 +274,12 @@ const Mnemosyne = function (mnemonica: object | null) {
 				return MNEMONICA;
 			}
 		});
-		const _proto = Object.create(null);
-		Reflect.setPrototypeOf(_proto, this);
 	} as ConstructorFunction<typeof MnemonicaProtoProps>;
 
-	Reflect.setPrototypeOf(Mnemonica.prototype, mnemonica);
+	// this throws an error
+	Object.setPrototypeOf(Mnemonica.prototype, mnemonica);
+	// and this just returns false
+	// Reflect.setPrototypeOf(Mnemonica.prototype, mnemonica);
 
 	Object.entries(MnemonicaProtoProps).forEach(([ name, method ]: [string, any]) => {
 		odp(Mnemonica.prototype, name, {
@@ -310,6 +315,15 @@ const Mnemosyne = function (mnemonica: object | null) {
 } as ConstructorFunction<typeof MnemonicaProtoProps>;
 
 const createMnemosyne = function (Uranus: unknown) {
+// const createMnemosyne = function (Uranus: unknown, typeProxy: any) {
+// 	if (typeof Uranus === 'undefined') {
+// 		const { __type__: type, Uranus: _uranus } = typeProxy;
+// 		console.log(type, _uranus);
+// 		// eslint-disable-next-line no-debugger
+// 		debugger;
+// 		throw new Error('createMnemosyne Uranus is not defined for typeProxy.');
+// 	}
+
 	const uranus = reflectPrimitiveWrappers(Uranus);
 	const mnemosyne = new Mnemosyne(uranus);
 	const mnemosyneProxy = new Proxy(mnemosyne, {
@@ -325,6 +339,9 @@ export default {
 	},
 	get prepareSubtypeForConstruction () {
 		return prepareSubtypeForConstruction;
+	},
+	get getDefaultPrototype () {
+		return getDefaultPrototype;
 	},
 	// get MnemosynePrototypeKeys () {
 	// 	return MnemosynePrototypeKeys;

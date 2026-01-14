@@ -2,24 +2,28 @@
 // npx tsc --target es6 --moduleResolution NodeNext --module NodeNext --sourceMap ./test/decorate.ts
 
 import { decorate, apply, ConstructorFunction } from '..';
-// import { Strict } from 'typeomatica';
 import { BaseClass } from 'typeomatica';
+// import { BaseClass, Strict } from 'typeomatica';
 
-// debugger;
+debugger;
 
-class Some {
-	field = 333;
-}
+// class Base {
+// 	base_field = 555;
+// }
+// class Some extends Base {
+// 	field = 333;
+// }
+// Object.setPrototypeOf(Base.prototype, new BaseClass);
+// const some = new Some;
+// console.log(some);
 
-Object.setPrototypeOf(Some.prototype, new BaseClass);
-
-
-const some = new Some;
-console.log(some);
-
-@decorate()
+// TypeError: parentClass.define is not a function
 // @Strict()
-// class MyDecoratedClass {
+@decorate()
+
+// <-- with the following error -->
+// TypeError: Cannot read properties of undefined (reading 'value')
+// @Strict() 
 class MyDecoratedClass {
 	field: number;
 	constructor () {
@@ -39,6 +43,7 @@ class MyDecoratedSubClass {
 }
 
 debugger;
+
 export const myDecoratedInstance = new MyDecoratedClass;
 export const myDecoratedInstance2 = new MyDecoratedClass;
 export const myDecoratedSubInstance = apply(myDecoratedInstance, MyDecoratedSubClass);
@@ -47,6 +52,7 @@ const MyFn = function () {
 	this.sub_sub_field = 123;
 } as ConstructorFunction<{ sub_sub_field: number }>;
 
+// Object.setPrototypeOf(MyFn.prototype, new BaseClass);
 @decorate(MyDecoratedSubClass)
 class MyDecoratedSubSubClass extends MyFn {
 	sub_sub_field: number;
@@ -68,3 +74,5 @@ const MyOtherFn = MyDecoratedClass.define('MyOtherFn', function (this: { prop: n
 // debugger;
 
 export const myOtherInstance = apply(myDecoratedInstance, MyOtherFn);
+
+debugger;

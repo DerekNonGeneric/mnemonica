@@ -103,8 +103,9 @@ const tests = ( opts ) => {
 		describe( 'constructors sequence is ok', () => {
 			const constructorsSequence = collectConstructors( evenMore, true );
 			it( 'must be ok', () => {
+				// debugger;
 				// assert.equal(constructorsSequence.length, 25);
-				assert.equal( constructorsSequence.length, 20 );
+				assert.equal( constructorsSequence.length, 19 );
 				assert.deepEqual( constructorsSequence, [
 					'EvenMore',
 					'EvenMore',
@@ -130,7 +131,7 @@ const tests = ( opts ) => {
 					'UserTypeConstructor',
 					'Mnemonica',
 					'Mnemosyne',
-					'Object: null prototype',
+					// 'Object: null prototype',
 					// 'GaiaConstructor', // ancient memories
 					// 'Object'
 				] );

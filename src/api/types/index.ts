@@ -19,6 +19,9 @@ const {
 import { ErrorsTypes } from '../../descriptors/errors';
 // import { descriptors } from '../../descriptors';
 
+import mnemosynes from './Mnemosyne';
+const { getDefaultPrototype } = mnemosynes;
+
 const {
 	ALREADY_DECLARED,
 	WRONG_TYPE_DEFINITION,
@@ -106,7 +109,11 @@ const TypeDescriptor = function (
 		}
 	} );
 
-	types.set( TypeName, new TypeProxy( type ) );
+	// const Uranus = isSubType ? Object.create(null) : proto;
+	const Uranus = isSubType ? undefined : proto;
+	types.set( TypeName, new TypeProxy( type, Uranus ) );
+	
+	// types.set( TypeName, new TypeProxy( type ) );
 
 	return types.get( TypeName );
 
@@ -128,6 +135,10 @@ odp( TypeDescriptor.prototype, Symbol.hasInstance, {
 	}
 } );
 
+/*
+here we use function to retreive a contructor
+and constructHandlerGetter is that function
+*/
 const defineUsingType = function ( this: any, subtypes: any, constructHandlerGetter: CallableFunction, config: any ) {
 	// we need this to extract TypeName
 	const type = constructHandlerGetter();
@@ -152,11 +163,29 @@ const defineUsingType = function ( this: any, subtypes: any, constructHandlerGet
 				return TypeName;
 			}
 		} );
+		
+		// this was checking for class / function
+		// functions has .writable prototype
+		// and classes are has not
 		const protoDesc: any = Object
 			.getOwnPropertyDescriptor( constructHandler, 'prototype' );
 		if ( protoDesc.writable ) {
-			constructHandler.prototype = {};
+			// constructHandler.prototype = {};
+			constructHandler.prototype = getDefaultPrototype();
 		}
+		
+		// TODO:
+		// side-way, non correctly working
+		// with createInstanceModificator for line
+		// Object.defineProperties(ModificatorType.prototype, props);
+		// for repeatable instance creations
+		// ↓↓↓ ↓↓↓ ↓↓↓
+		// else {
+		// 	// so let use Object.setPrototypeOf instead
+		// 	// Object.setPrototypeOf(Object.getPrototypeOf(constructHandler.prototype), getDefaultPrototype());
+		// 	Object.setPrototypeOf(constructHandler.prototype, getDefaultPrototype());
+		// }
+
 		return constructHandler;
 	};
 
@@ -178,6 +207,11 @@ const defineUsingType = function ( this: any, subtypes: any, constructHandlerGet
 	);
 };
 
+
+/*
+here we directly passing constructHandler
+as a constructor for instances creations
+*/
 const defineUsingFunction = function (
 	this: any,
 	subtypes: any,
@@ -215,10 +249,11 @@ const defineUsingFunction = function (
 	const proto = (
 		hop( constructHandler, 'prototype' ) &&
 		( constructHandler.prototype instanceof Object  )
-	) ? constructHandler.prototype : {};
+	// ) ? constructHandler.prototype : Object.create(null);
+	) ? constructHandler.prototype : getDefaultPrototype();
 	
 	// let proto = {};
-	// if (hop( constructHandler, 'prototype' ) && constructHandler.prototype instanceof Object ) {
+	// if ( hop( constructHandler, 'prototype' ) && ( constructHandler.prototype instanceof Object ) ) {
 	// 	proto = Object.assign( {}, constructHandler.prototype );
 	// 	Object.setPrototypeOf( proto, constructHandler.prototype );
 	// }

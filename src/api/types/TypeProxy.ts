@@ -17,7 +17,7 @@ const {
 } = ErrorsTypes;
 
 import mnemosynes from './Mnemosyne';
-const { createMnemosyne } = mnemosynes;
+const { createMnemosyne, getDefaultPrototype } = mnemosynes;
 
 import { InstanceCreator } from './InstanceCreator';
 
@@ -110,8 +110,8 @@ TypeProxy.prototype.apply = function (__: unknown, Uranus: unknown, args: unknow
 };
 
 
-
-
+// this always is initial type creation ...
+// so no way to invoke this otherwise than direct type call
 TypeProxy.prototype.construct = function (__: unknown, args: unknown[]) {
 
 	// new.target id equal with target here
@@ -121,7 +121,15 @@ TypeProxy.prototype.construct = function (__: unknown, args: unknown[]) {
 		Uranus
 	} = this;
 
-	const mnemosyneProxy = createMnemosyne(Uranus || null);
+	// so this is a direct Sub-Type invocation
+	// having no existentInstance created earlier
+	// then we should rely on that somehow
+	const uranus = type.isSubType ? getDefaultPrototype() : Uranus;	
+
+	// "this" argument may be passed for tracking why something happened
+	// but uncomment it there in createMnemosyne if needed
+	// const mnemosyneProxy = createMnemosyne(uranus, this);
+	const mnemosyneProxy = createMnemosyne(uranus);
 	const instance = new InstanceCreator( type, mnemosyneProxy, args );
 
 	// const instance = new InstanceCreator(type, null, args);

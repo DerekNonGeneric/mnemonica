@@ -42,17 +42,20 @@ var __setFunctionName = (this && this.__setFunctionName) || function (f, name, p
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.myOtherInstance = exports.myDecoratedSubSubInstance = exports.myDecoratedSubInstance = exports.myDecoratedInstance2 = exports.myDecoratedInstance = void 0;
 const __1 = require("..");
-// import { Strict } from 'typeomatica';
 const typeomatica_1 = require("typeomatica");
-// debugger;
-class Some {
-    constructor() {
-        this.field = 333;
-    }
-}
-Object.setPrototypeOf(Some.prototype, new typeomatica_1.BaseClass);
-const some = new Some;
-console.log(some);
+// import { BaseClass, Strict } from 'typeomatica';
+debugger;
+// class Base {
+// 	base_field = 555;
+// }
+// class Some extends Base {
+// 	field = 333;
+// }
+// Object.setPrototypeOf(Base.prototype, new BaseClass);
+// const some = new Some;
+// console.log(some);
+// TypeError: parentClass.define is not a function
+// @Strict()
 let MyDecoratedClass = (() => {
     let _classDecorators = [(0, __1.decorate)()];
     let _classDescriptor;
@@ -102,6 +105,7 @@ exports.myDecoratedSubInstance = (0, __1.apply)(exports.myDecoratedInstance, MyD
 const MyFn = function () {
     this.sub_sub_field = 123;
 };
+// Object.setPrototypeOf(MyFn.prototype, new BaseClass);
 let MyDecoratedSubSubClass = (() => {
     let _classDecorators = [(0, __1.decorate)(MyDecoratedSubClass)];
     let _classDescriptor;
@@ -134,4 +138,5 @@ const MyOtherFn = MyDecoratedClass.define('MyOtherFn', function () {
 });
 // debugger;
 exports.myOtherInstance = (0, __1.apply)(exports.myDecoratedInstance, MyOtherFn);
+debugger;
 //# sourceMappingURL=decorate.js.map
