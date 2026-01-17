@@ -1,5 +1,6 @@
 'use strict';
 
+import { hop } from '../../utils/hop';
 /*
 
 // it is not that easy
@@ -38,13 +39,17 @@ const getClassConstructor = ( ConstructHandler: any, CreationHandler: any, ) => 
 		constructor ( ...args: any[] ) {
 			const answer = super( ...args );
 			// debugger;
-			return CreationHandler.call( this, answer );
+			const result = CreationHandler.call( this, answer );
+			return result;
 		}
 	};
 };
 
 const getFunctionConstructor = ( ConstructHandler: any, CreationHandler: any, ) => {
-	const newable = Object.hasOwnProperty.call( ConstructHandler, 'prototype' );
+	const newable = hop( ConstructHandler, 'prototype' ) &&
+		hop( ConstructHandler.prototype, 'constructor' ) &&
+		(ConstructHandler.prototype.constructor == ConstructHandler);
+	
 	return function ( this: any, ...args: any[] ) {
 		let answer;
 		// if (!new.target) {
@@ -54,12 +59,14 @@ const getFunctionConstructor = ( ConstructHandler: any, CreationHandler: any, ) 
 			answer = ConstructHandler.call( this, ...args );
 		} else {
 			const _proto = ConstructHandler.prototype;
+			// !!! it MUST be strict replacement !!!
+			// !!! this is the only way to keep Prototype Chain correct !!!
 			ConstructHandler.prototype = this.constructor.prototype;
-			// Object.setPrototypeOf(ConstructHandler.prototype, Object.create(this.constructor.prototype));
 			answer = new ConstructHandler( ...args );
 			ConstructHandler.prototype = _proto;
 		}
-		return CreationHandler.call( this, answer );
+		const result = CreationHandler.call( this, answer );
+		return result;
 	};
 };
 

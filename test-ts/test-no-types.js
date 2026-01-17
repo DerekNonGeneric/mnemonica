@@ -94,7 +94,7 @@ var bSub = (0, __1.bind)(first, SomeSubType)();
 console.log(bSub);
 var cSub = (0, __1.call)(first, SomeSubType);
 console.log(cSub);
-// eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/ban-types
 // function defined  <T> (cstr: IDEF<T>, s: unknown) {
 function defined (cstr, s) {
 	console.log(s);

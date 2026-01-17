@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment, indent, new-cap, space-before-function-paren */
+/* eslint-disable @typescript-eslint/ban-ts-comment, space-before-function-paren */
 'use strict';
 
 import {
@@ -65,7 +65,7 @@ const $run = function <E extends object, T extends object, S extends Proto<E, T>
 ): {
 		[key in keyof S]: S[key]
 	} {
-	// eslint-disable-next-line no-debugger
+	 
 	// debugger;
 	// @ts-ignore
 	const { TypeName } = Constructor;
@@ -114,10 +114,10 @@ export const bind = function <E extends object, T extends object, S extends Prot
 };
 
 export const decorate = function (
-	parentClass: { new(): unknown } | constructorOptions | undefined = {},
+	parentClass?: { new(): unknown } | constructorOptions | undefined,
 	config?: constructorOptions
 ) {
-	if (typeof parentClass === 'object' && !(parentClass instanceof Function)) {
+	if (config === undefined && typeof parentClass === 'object' && !(parentClass instanceof Function)) {
 		config = parentClass as constructorOptions;
 		parentClass = undefined;
 	}
@@ -182,4 +182,4 @@ export const errors = descriptors.ErrorsTypes;
 
 export { utils } from './utils';
 export { defineStackCleaner } from './utils';
-/* eslint-enable @typescript-eslint/ban-ts-comment, indent, new-cap, space-before-function-paren */
+/* eslint-enable @typescript-eslint/ban-ts-comment, space-before-function-paren */

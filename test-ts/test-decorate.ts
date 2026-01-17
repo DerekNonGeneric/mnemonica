@@ -2,7 +2,7 @@ import { define, IDEF } from '..';
 
 debugger;
 
-// eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/ban-types
 // function defined  <T> (cstr: IDEF<T>, s: ClassDecoratorContext<typeof cstr>) {
 function defined <T extends { new (): unknown }> (cstr: T, s: ClassDecoratorContext<T>) {
 	debugger;

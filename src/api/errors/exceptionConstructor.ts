@@ -189,7 +189,7 @@ const prepareException = function ( this: any, target: any, error: Error, ...arg
 	ExceptionCreator.config.blockErrors = false;
 
 	ExceptionCreator.existentInstance = error;
-	// eslint-disable-next-line no-shadow
+	 
 	ExceptionCreator.ModificatorType = makeFakeModificatorType( TypeName, function ( this: unknown ) {
 		return exceptionConsctructHandler.call( this, {
 			instance,

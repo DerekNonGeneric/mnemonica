@@ -75,7 +75,7 @@ const MnemonicaProtoProps = {
 		} = type;
 
 		// 'function', cause might be called with 'new'
-		// eslint-disable-next-line no-shadow, @typescript-eslint/no-explicit-any
+		 
 		return function (this: any, ...forkArgs: any[]) {
 
 			let forked;
@@ -114,7 +114,7 @@ const MnemonicaProtoProps = {
 	},
 
 	sibling () {
-		// eslint-disable-next-line @typescript-eslint/no-this-alias, @typescript-eslint/no-explicit-any
+		 
 		const siblings = (SiblingTypeName: string) => {
 
 			const props = _getProps(this) as Props;
@@ -275,10 +275,10 @@ const Mnemosyne = function (mnemonica: object) {
 			}
 		});
 	} as ConstructorFunction<typeof MnemonicaProtoProps>;
-
+	
 	// this throws an error
 	Object.setPrototypeOf(Mnemonica.prototype, mnemonica);
-	// and this just returns false
+	// while this just returns false, silently ... unfortunately
 	// Reflect.setPrototypeOf(Mnemonica.prototype, mnemonica);
 
 	Object.entries(MnemonicaProtoProps).forEach(([ name, method ]: [string, any]) => {

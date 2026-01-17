@@ -5,6 +5,7 @@ import { constants } from '../constants';
 const {
 	MNEMOSYNE,
 	MNEMONICA,
+	// SymbolConstructorName
 } = constants;
 
 const getAdditor = (constructors: string[] | { [index: string]: boolean }) => {
@@ -35,6 +36,7 @@ export const collectConstructors = (self: object, asSequence = false) => {
 	}
 
 	let proto: any = Reflect.getPrototypeOf(self);
+
 	let mnemonicaReached = false;
 	while (proto) {
 		if (proto.constructor) {

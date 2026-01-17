@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 'use strict';
 
 import { ConstructorFunction } from '../../types';

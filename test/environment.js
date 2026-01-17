@@ -380,12 +380,17 @@ const tests = (opts) => {
 
 			it('decorate works correctly', () => {
 				const ogp = Object.getPrototypeOf;
+				debugger;
 				expect(myDecoratedInstance.field).instanceOf(Object);
 				expect(myDecoratedInstance.field.valueOf()).equal(123);
 
 				expect(myDecoratedSubInstance.sub_field).instanceOf(Object);
 				expect(myDecoratedSubInstance.sub_field.valueOf()).equal(321);
 				expect(ogp(ogp(ogp(myDecoratedSubInstance))).field.valueOf()).equal(123);
+				
+				// expect(myOtherInstance.field).instanceOf(Object);
+				// expect(myOtherInstance.field.valueOf()).equal(321);
+				// expect(myOtherInstance.prop).instanceOf(Object);
 				expect(myOtherInstance.prop.valueOf()).equal(321);
 
 				expect(myDecoratedSubSubInstance.sub_sub_field).instanceOf(Object);

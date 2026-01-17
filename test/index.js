@@ -907,7 +907,7 @@ describe('Main Test', () => {
 				NaN,
 				+0,
 				-0,
-				// eslint-disable-next-line no-undef
+				 
 				BigInt(0),
 				Symbol('azaza'),
 				new Proxy({}, {}),

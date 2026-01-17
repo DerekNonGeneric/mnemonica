@@ -1,8 +1,8 @@
-/* eslint-disable new-cap */
+ 
 'use strict';
 
 export { };
-// eslint-disable-next-line no-shadow
+ 
 import { beforeAll, describe, expect, it, test } from '@jest/globals';
 
 const mnemonica = require( '..' );
@@ -250,7 +250,7 @@ const user = UserType( USER_DATA );
 // });
 
 const Main = define( 'Main', function ( this: any ) {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any, no-shadow
+	 
 	this.constructNested = function ( this: any ) {
 		return new this.NestedConstruct();
 	};
@@ -824,7 +824,7 @@ describe( 'Main Test', () => {
 				NaN,
 				+0,
 				-0,
-				// eslint-disable-next-line no-undef
+				 
 				BigInt( 0 ),
 				Symbol( 'azaza' ),
 				new Proxy( {}, {} ),

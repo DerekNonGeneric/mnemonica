@@ -88,23 +88,32 @@ export const throwModificationError = function ( this: any, error: any ) {
 	const erroredInstance = new self.InstanceModificator();
 
 	let errorProto: any = Reflect.getPrototypeOf( erroredInstance );
+	let isMnemonicaInstance = false;
 	while ( errorProto ) {
-		const testToProto = Reflect.getPrototypeOf( errorProto ) as object;
-		if (testToProto.constructor.name === MNEMONICA && Object.hasOwnProperty.call(testToProto, 'constructor')) {
+		const testToProto = Reflect.getPrototypeOf( errorProto );
+		// if (testToProto === null) {
+		// 	break;
+		// }
+		// if (testToProto === Object.prototype) {
+		// 	break;
+		// }
+		if (
+			testToProto !== null && testToProto.constructor.name === MNEMONICA &&
+			Object.hasOwnProperty.call(testToProto, 'constructor')
+		) {
+			isMnemonicaInstance = true;
 			break;
 		}
 		errorProto = testToProto;
 	}
 
-	Reflect.setPrototypeOf( errorProto, error);
-	// const result = Reflect.setPrototypeOf( errorProto, error);
+	// Reflect.setPrototypeOf( errorProto, error);
+	const result = Reflect.setPrototypeOf( errorProto, error);
+	// let result = Reflect.setPrototypeOf( errorProto, error);
 	// if (result === false) {
-	// 	try {
-	// 		Object.setPrototypeOf(errorProto, error);
-	// 	} catch (_err) {
-	// 		console.error(_err);
-	// 		erroredInstance = Object.create(error);
-	// 	}
+	// 	Object.setPrototypeOf(errorProto, error);
+	// 	// unreachable
+	// 	result = true;
 	// }
 	// console.log(result);
 
@@ -152,56 +161,59 @@ export const throwModificationError = function ( this: any, error: any ) {
 
 	self.inheritedInstance = erroredInstance;
 
-	// if (result) {
+	if (result) {
+		if (isMnemonicaInstance) {
 
-	// if hooks had some interception: start
-	const results = self.invokePostHooks();
-	const {
-		type,
-		collection,
-	} = results;
-	if ( type.has( true ) || collection.has( true ) ) {
-		return;
+			// if hooks had some interception: start
+			const results = self.invokePostHooks();
+			const {
+				type,
+				collection,
+			} = results;
+			if ( type.has( true ) || collection.has( true ) ) {
+				return;
+			}
+		}
+
+		// }
+
+		// if hooks had some interception: stop
+
+		odp( erroredInstance, 'args', {
+			get () {
+				return args;
+			}
+		} );
+
+		odp( erroredInstance, 'originalError', {
+			get () {
+				return error;
+			}
+		} );
+
+		odp( erroredInstance, 'instance', {
+			get () {
+				return erroredInstance;
+			}
+		} );
+
+		odp( erroredInstance, 'extract', {
+			get () {
+				return () => {
+					const _parent = parent(erroredInstance);
+					return extract(_parent);
+				};
+			}
+		} );
+
+		odp( erroredInstance, 'parse', {
+			get () {
+				return () => {
+					return parse( erroredInstance );
+				};
+			}
+		} );
 	}
-
-	// }
-
-	// if hooks had some interception: stop
-
-	odp( erroredInstance, 'args', {
-		get () {
-			return args;
-		}
-	} );
-
-	odp( erroredInstance, 'originalError', {
-		get () {
-			return error;
-		}
-	} );
-
-	odp( erroredInstance, 'instance', {
-		get () {
-			return erroredInstance;
-		}
-	} );
-
-	odp( erroredInstance, 'extract', {
-		get () {
-			return () => {
-				const _parent = parent(erroredInstance);
-				return extract(_parent);
-			};
-		}
-	} );
-
-	odp( erroredInstance, 'parse', {
-		get () {
-			return () => {
-				return parse( erroredInstance );
-			};
-		}
-	} );
 
 	throw erroredInstance;
 

@@ -2,37 +2,60 @@
 // npx tsc --target es6 --moduleResolution NodeNext --module NodeNext --sourceMap ./test/decorate.ts
 
 import { decorate, apply, ConstructorFunction } from '..';
-import { BaseClass } from 'typeomatica';
-// import { BaseClass, Strict } from 'typeomatica';
+// import { BaseClass } from 'typeomatica';
+// import { Strict } from 'typeomatica';
+import { BaseClass, Strict } from 'typeomatica';
 
 debugger;
 
-// class Base {
-// 	base_field = 555;
-// }
-// class Some extends Base {
-// 	field = 333;
-// }
-// Object.setPrototypeOf(Base.prototype, new BaseClass);
-// const some = new Some;
-// console.log(some);
+class Base {
+	base_field = 555;
+}
+class Some extends Base {
+	field = 333;
+}
+Object.setPrototypeOf(Base.prototype, new BaseClass);
+const some = new Some;
+console.log(some);
 
-// TypeError: parentClass.define is not a function
-// @Strict()
-@decorate()
+@Strict()
+class SBase {
+	base_field = 555;
+}
+class SomeS extends SBase {
+	field = 333;
+}
+const somes = new SomeS;
+console.log(somes);
 
+class BaseE extends BaseClass {
+	base_field = 555;
+}
+class SomeE extends BaseE {
+	field = 333;
+}
+const esome = new SomeE;
+console.log(esome);
+
+debugger;
+@decorate({ blockErrors : true })
 // <-- with the following error -->
 // TypeError: Cannot read properties of undefined (reading 'value')
-// @Strict() 
+@Strict()
 class MyDecoratedClass {
+// class MyDecoratedClass extends BaseClass {
 	field: number;
 	constructor () {
+		// debugger;
+		// super();
 		// debugger;
 		this.field = 123;
 	}
 }
 
-Object.setPrototypeOf(MyDecoratedClass.prototype, new BaseClass);
+debugger;
+const immediateInstance = new MyDecoratedClass;
+console.log(immediateInstance);
 
 @decorate(MyDecoratedClass, { strictChain : false })
 class MyDecoratedSubClass {
@@ -52,6 +75,10 @@ const MyFn = function () {
 	this.sub_sub_field = 123;
 } as ConstructorFunction<{ sub_sub_field: number }>;
 
+// TODO: this can not be done on a sub-class
+// check if parent class is not decorated
+// check if this is invocation for extended class
+// throw an error if yes
 // Object.setPrototypeOf(MyFn.prototype, new BaseClass);
 @decorate(MyDecoratedSubClass)
 class MyDecoratedSubSubClass extends MyFn {
@@ -64,15 +91,33 @@ class MyDecoratedSubSubClass extends MyFn {
 
 export const myDecoratedSubSubInstance = apply(myDecoratedSubInstance, MyDecoratedSubSubClass);
 
+
+debugger;
+
+@decorate()
+class MyOtherDecoratedClass extends BaseClass {
+	field: number;
+	constructor () {
+		super();
+		this.field = 123;
+	}
+}
+
+debugger;
+
+const myOtherDecoratedInstance = new MyOtherDecoratedClass();
+
+debugger;
+
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-// eslint-disable-next-line no-unused-vars
-const MyOtherFn = MyDecoratedClass.define('MyOtherFn', function (this: { prop: number }) {
+ 
+const MyOtherFn = MyOtherDecoratedClass.define('MyOtherFn', function (this: { prop: number }) {
 	this.prop = 321;
 });
 
-// debugger;
+debugger;
 
-export const myOtherInstance = apply(myDecoratedInstance, MyOtherFn);
+export const myOtherInstance = apply(myOtherDecoratedInstance, MyOtherFn);
 
 debugger;

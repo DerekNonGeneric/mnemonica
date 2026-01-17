@@ -248,7 +248,9 @@ const defineUsingFunction = function (
 
 	const proto = (
 		hop( constructHandler, 'prototype' ) &&
-		( constructHandler.prototype instanceof Object  )
+		// using ↓↓↓ cause for proxy in chain is instanceof fails
+		// and also fails for just Object.create(null)
+		( typeof constructHandler.prototype === 'object' )
 	// ) ? constructHandler.prototype : Object.create(null);
 	) ? constructHandler.prototype : getDefaultPrototype();
 	

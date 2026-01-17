@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 'use strict';
 
 import { ConstructorFunction } from '../../types';
@@ -229,8 +229,7 @@ const InstanceCreatorPrototype = {
 	throwModificationError
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+ 
 export const InstanceCreator = function ( this: any, type: any, existentInstance: any, args: any[], chained: boolean ) {
 
 	const {
@@ -246,7 +245,7 @@ export const InstanceCreator = function ( this: any, type: any, existentInstance
 		submitStack
 	} = config;
 
-	// eslint-disable-next-line new-cap
+	 
 	const mc = ModificationConstructor();
 
 	// eslint-disable-next-line @typescript-eslint/no-this-alias
