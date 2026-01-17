@@ -19,8 +19,8 @@ const bindMethod = function ( hookData, instance, methodName, MethodItself ) {
 
 	odp( instance, methodName, {
 		get () {
-			// eslint-disable-next-line @typescript-eslint/no-this-alias
-			// eslint-disable-next-line no-shadow, @typescript-eslint/no-explicit-any
+			 
+			 
 			return function ( ...args ) {
 				// || instance;
 				const applyTo = this !== undefined ? this : from;

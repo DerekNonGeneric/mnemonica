@@ -13,5 +13,6 @@ declare const _default: {
         };
         throwModificationError: (this: any, error: any) => void;
     }> | undefined;
+    readonly getDefaultPrototype: () => any;
 };
 export default _default;

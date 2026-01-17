@@ -46,7 +46,7 @@ export const invokeHook = function ( this: any, hookType: string, opts: { [ inde
 			} );
 		}
 
-		// eslint-disable-next-line no-shadow
+		 
 		this.hooks[ hookType ].forEach( ( hook: ( this: unknown, hookParams: typeof hookArgs ) => void ) => {
 			const result = hook.call( self, hookArgs );
 			invocationResults.add( result );

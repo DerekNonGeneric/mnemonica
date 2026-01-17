@@ -5,7 +5,7 @@
 
 // type narrowable = string | number | boolean | symbol | object | undefined | void | null | [];
 // export type IDEF<T extends RN> = {	new(): T } | { (this: T): void };
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export type IDEF<T> = { new(): T } | { ( this: T, ...args: any[] ): void };
 
 export interface ConstructorFunction<ConstructorInstance extends object> {

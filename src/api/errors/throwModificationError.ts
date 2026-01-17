@@ -3,7 +3,9 @@
 import { constants } from '../../constants';
 const {
 	odp,
+	MNEMONICA,
 } = constants;
+
 
 import { ErrorsTypes } from '../../descriptors/errors';
 const {
@@ -19,7 +21,9 @@ const {
 
 import { utils } from '../../utils';
 const {
-	parse
+	parse,
+	parent,
+	extract
 } = utils;
 
 import { makeInstanceModificator } from '../types/InstanceModificator';
@@ -80,18 +84,38 @@ export const throwModificationError = function ( this: any, error: any ) {
 
 	self.InstanceModificator = makeInstanceModificator( self );
 
+	// let erroredInstance = new self.InstanceModificator();
 	const erroredInstance = new self.InstanceModificator();
 
 	let errorProto: any = Reflect.getPrototypeOf( erroredInstance );
+	let isMnemonicaInstance = false;
 	while ( errorProto ) {
 		const testToProto = Reflect.getPrototypeOf( errorProto );
-		if (testToProto === null) {
+		// if (testToProto === null) {
+		// 	break;
+		// }
+		// if (testToProto === Object.prototype) {
+		// 	break;
+		// }
+		if (
+			testToProto !== null && testToProto.constructor.name === MNEMONICA &&
+			Object.hasOwnProperty.call(testToProto, 'constructor')
+		) {
+			isMnemonicaInstance = true;
 			break;
 		}
 		errorProto = testToProto;
 	}
 
-	Reflect.setPrototypeOf( errorProto, error);
+	// Reflect.setPrototypeOf( errorProto, error);
+	const result = Reflect.setPrototypeOf( errorProto, error);
+	// let result = Reflect.setPrototypeOf( errorProto, error);
+	// if (result === false) {
+	// 	Object.setPrototypeOf(errorProto, error);
+	// 	// unreachable
+	// 	result = true;
+	// }
+	// console.log(result);
 
 	const stack: string[] = [];
 
@@ -137,52 +161,59 @@ export const throwModificationError = function ( this: any, error: any ) {
 
 	self.inheritedInstance = erroredInstance;
 
-	// if hooks had some interception: start
-	const results = self.invokePostHooks();
-	const {
-		type,
-		collection,
-	} = results;
+	if (result) {
+		if (isMnemonicaInstance) {
 
-	if ( type.has( true ) || collection.has( true ) ) {
-		return;
+			// if hooks had some interception: start
+			const results = self.invokePostHooks();
+			const {
+				type,
+				collection,
+			} = results;
+			if ( type.has( true ) || collection.has( true ) ) {
+				return;
+			}
+		}
+
+		// }
+
+		// if hooks had some interception: stop
+
+		odp( erroredInstance, 'args', {
+			get () {
+				return args;
+			}
+		} );
+
+		odp( erroredInstance, 'originalError', {
+			get () {
+				return error;
+			}
+		} );
+
+		odp( erroredInstance, 'instance', {
+			get () {
+				return erroredInstance;
+			}
+		} );
+
+		odp( erroredInstance, 'extract', {
+			get () {
+				return () => {
+					const _parent = parent(erroredInstance);
+					return extract(_parent);
+				};
+			}
+		} );
+
+		odp( erroredInstance, 'parse', {
+			get () {
+				return () => {
+					return parse( erroredInstance );
+				};
+			}
+		} );
 	}
-	// if hooks had some interception: stop
-
-	odp( erroredInstance, 'args', {
-		get () {
-			return args;
-		}
-	} );
-
-	odp( erroredInstance, 'originalError', {
-		get () {
-			return error;
-		}
-	} );
-
-	odp( erroredInstance, 'instance', {
-		get () {
-			return erroredInstance;
-		}
-	} );
-
-	odp( erroredInstance, 'extract', {
-		get () {
-			return () => {
-				const parent = erroredInstance.parent();
-				return parent.extract();
-			};
-		}
-	} );
-
-	odp( erroredInstance, 'parse', {
-		get () {
-			return () => {
-				return parse( erroredInstance );
-			};
-		}
-	} );
 
 	throw erroredInstance;
 
