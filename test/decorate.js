@@ -1,6 +1,5 @@
 "use strict";
 // npx tsc --sourceMap ./test/decorate.ts
-// npx tsc --target es6 --moduleResolution NodeNext --module NodeNext --sourceMap ./test/decorate.ts
 var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
     function accept(f) { if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected"); return f; }
     var kind = contextIn.kind, key = kind === "getter" ? "get" : kind === "setter" ? "set" : "value";
@@ -41,11 +40,14 @@ var __setFunctionName = (this && this.__setFunctionName) || function (f, name, p
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.myOtherInstance = exports.myDecoratedSubSubInstance = exports.myDecoratedSubInstance = exports.myDecoratedInstance2 = exports.myDecoratedInstance = void 0;
+// fails on loading sourcemap ↓↓↓ 
+// npx tsc --target es6 --moduleResolution NodeNext --module NodeNext --sourceMap --inlineSources ./test/decorate.ts
+// works ↓↓↓
+// npx tsc --target es6 --moduleResolution NodeNext --module NodeNext --sourceMap ./test/decorate.ts
 const __1 = require("..");
-// import { BaseClass } from 'typeomatica';
-// import { Strict } from 'typeomatica';
 const typeomatica_1 = require("typeomatica");
 debugger;
+const deep = { deep: true };
 class Base {
     constructor() {
         this.base_field = 555;
@@ -57,11 +59,13 @@ class Some extends Base {
         this.field = 333;
     }
 }
-Object.setPrototypeOf(Base.prototype, new typeomatica_1.BaseClass);
+Object.setPrototypeOf(Base.prototype, new typeomatica_1.BaseClass(deep));
 const some = new Some;
 console.log(some);
+// @ts-ignore
+console.log('some.deep', some.deep);
 let SBase = (() => {
-    let _classDecorators = [(0, typeomatica_1.Strict)()];
+    let _classDecorators = [(0, typeomatica_1.Strict)(deep)];
     let _classDescriptor;
     let _classExtraInitializers = [];
     let _classThis;
@@ -88,12 +92,17 @@ class SomeS extends SBase {
 }
 const somes = new SomeS;
 console.log(somes);
+// @ts-ignore
+console.log('somes.deep', somes.deep);
+debugger;
+// @ts-ignore
 class BaseE extends typeomatica_1.BaseClass {
     constructor() {
         super(...arguments);
         this.base_field = 555;
     }
 }
+// @ts-ignore
 class SomeE extends BaseE {
     constructor() {
         super(...arguments);

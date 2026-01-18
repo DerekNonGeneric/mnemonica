@@ -2,34 +2,33 @@
 	"compilerOptions": {
 		"module": "commonjs",
 		"target": "ES6",
-		"lib": [
-			"ES6",
-		],
+		"strict": true,
+		"alwaysStrict": true,
+
 		"esModuleInterop": false,
 		"allowSyntheticDefaultImports": false,
-		"strict": true,
-		"strictNullChecks": true,
-		"alwaysStrict": true,
-		"strictFunctionTypes": true,
-		"diagnostics": true,
-		"noImplicitThis": true,
-		"extendedDiagnostics": true,
-		"experimentalDecorators": true,
-		"noImplicitReturns": true,
-		"noFallthroughCasesInSwitch": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
+
 		"declaration": true,
+		"diagnostics": true,
+		"experimentalDecorators": true,
+		"extendedDiagnostics": true,
+		"forceConsistentCasingInFileNames": true,
 		"inlineSourceMap": true,
 		"inlineSources": true,
-		"outDir": "build",
-		"traceResolution": false,
+
 		"isolatedModules": true,
+
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"outDir": "build",
 		"removeComments": true,
-		"forceConsistentCasingInFileNames": true,
-		"types": [
-			"node"
-		]
+		"strictFunctionTypes": true,
+		"strictNullChecks": true,
+		"traceResolution": false,
+		"types": [ "node" ]
 	},
 	"include": [
 		"./src/**/*.ts",
