@@ -1,24 +1,30 @@
 // npx tsc --sourceMap ./test/decorate.ts
+
+// fails on loading sourcemap ↓↓↓
+// npx tsc --target es6 --moduleResolution NodeNext --module NodeNext --sourceMap --inlineSources ./test/decorate.ts
+
+// works ↓↓↓
 // npx tsc --target es6 --moduleResolution NodeNext --module NodeNext --sourceMap ./test/decorate.ts
 
 import { decorate, apply, ConstructorFunction } from '..';
-// import { BaseClass } from 'typeomatica';
-// import { Strict } from 'typeomatica';
 import { BaseClass, Strict } from 'typeomatica';
 
 debugger;
 
+const deep = { deep: true };
 class Base {
 	base_field = 555;
 }
 class Some extends Base {
 	field = 333;
 }
-Object.setPrototypeOf(Base.prototype, new BaseClass);
+Object.setPrototypeOf(Base.prototype, new BaseClass(deep));
 const some = new Some;
 console.log(some);
+// @ts-ignore
+console.log('some.deep', some.deep);
 
-@Strict()
+@Strict(deep)
 class SBase {
 	base_field = 555;
 }
@@ -27,10 +33,16 @@ class SomeS extends SBase {
 }
 const somes = new SomeS;
 console.log(somes);
+// @ts-ignore
+console.log('somes.deep', somes.deep);
 
+debugger;
+
+// @ts-ignore
 class BaseE extends BaseClass {
 	base_field = 555;
 }
+// @ts-ignore
 class SomeE extends BaseE {
 	field = 333;
 }
@@ -38,14 +50,15 @@ const esome = new SomeE;
 console.log(esome);
 
 debugger;
-@decorate({ blockErrors : true })
+@decorate({ blockErrors: true })
 // <-- with the following error -->
 // TypeError: Cannot read properties of undefined (reading 'value')
+// @ts-ignore
 @Strict()
 class MyDecoratedClass {
-// class MyDecoratedClass extends BaseClass {
+	// class MyDecoratedClass extends BaseClass {
 	field: number;
-	constructor () {
+	constructor() {
 		// debugger;
 		// super();
 		// debugger;
@@ -57,10 +70,10 @@ debugger;
 const immediateInstance = new MyDecoratedClass;
 console.log(immediateInstance);
 
-@decorate(MyDecoratedClass, { strictChain : false })
+@decorate(MyDecoratedClass, { strictChain: false })
 class MyDecoratedSubClass {
 	sub_field: number;
-	constructor () {
+	constructor() {
 		this.sub_field = 321;
 	}
 }
@@ -83,7 +96,7 @@ const MyFn = function () {
 @decorate(MyDecoratedSubClass)
 class MyDecoratedSubSubClass extends MyFn {
 	sub_sub_field: number;
-	constructor () {
+	constructor() {
 		super();
 		this.sub_sub_field = 321;
 	}
@@ -95,9 +108,10 @@ export const myDecoratedSubSubInstance = apply(myDecoratedSubInstance, MyDecorat
 debugger;
 
 @decorate()
+// @ts-ignore
 class MyOtherDecoratedClass extends BaseClass {
 	field: number;
-	constructor () {
+	constructor() {
 		super();
 		this.field = 123;
 	}
@@ -111,7 +125,7 @@ debugger;
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
- 
+
 const MyOtherFn = MyOtherDecoratedClass.define('MyOtherFn', function (this: { prop: number }) {
 	this.prop = 321;
 });
